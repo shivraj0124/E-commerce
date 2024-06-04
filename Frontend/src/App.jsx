@@ -1,5 +1,12 @@
-function App() {
-  return <h1 className="text-3xl font-bold underline text-center">Hello world!</h1>;
-}
+import React from "react";
+import { TopNav, Navbar } from "./components/index";
+const App = () => {
+  return (
+    <div className="">
+      <TopNav />
+      <Navbar />
+    </div>
+  );
+};
 
 export default App;
