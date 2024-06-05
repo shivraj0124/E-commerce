@@ -1,2 +1,2 @@
-export { default as TopNav } from "./TopNav.jsx";
-export { default as Navbar } from "./Navbar.jsx";
+export { default as SearchNav } from "./SearchNav.jsx";
+export { default as Navbar} from "./Navbar.jsx";
