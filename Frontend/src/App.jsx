@@ -1,6 +1,6 @@
-import React from "react";
-import { SearchNav, Navbar } from "./components/index";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { SearchNav, Navbar, ShopByCategoryModal } from "./components/index";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   Offers,
   Home,
@@ -13,6 +13,10 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 const App = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModal = () => {
+    setIsModalOpen(true);
+  };
   return (
     <BrowserRouter>
       <div className="">
@@ -26,22 +30,28 @@ const App = () => {
               <LocalShippingOutlinedIcon /> Free Shipping & Returns
             </span>
             <span className=" cursor-pointer hover:text-blue-600">
-              <PersonIcon /> My Account
+              <Link to={"/my-account"}>
+                <PersonIcon /> My Account
+              </Link>
             </span>
           </div>
         </div>
         <SearchNav />
-        <Navbar />
+        <Navbar openmodal={handleModal} />
 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/buy-again" element={<BuyAgain />} />
-          <Route path="/about-user" element={<AboutUser />} />
+          <Route path="/my-account" element={<AboutUser />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/user-favourite" element={<UserFavourite />} />
+          <Route path="/favourites" element={<UserFavourite />} />
         </Routes>
       </div>
+      <ShopByCategoryModal
+        open={isModalOpen}
+        close={() => setIsModalOpen(false)}
+      />
     </BrowserRouter>
   );
 };
