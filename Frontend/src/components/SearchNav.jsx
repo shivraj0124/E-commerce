@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-const SearchNav = () => {
-  const [category, setCategory] = useState("Select Category >");
-  const [searchTerm, setSearchTerm] = useState("");
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
+  const [tempCategory, setTempCategory] = useState(category);
+  const [tempSearchTerm, setTempSearchTerm] = useState(searchTerm);
+  const navigate = useNavigate();
+
+  const showSearch = () => {
+    if (tempSearchTerm.trim()) {
+      const queryParams = new URLSearchParams({
+        category,
+        keyword: searchTerm,
+      }).toString();
+      setCategory(tempCategory);
+      setSearchTerm(tempSearchTerm);
+      // console.log("temp" + tempSearchTerm);
+      // console.log("final" + searchTerm);
+      navigate(`/search?${queryParams}`);
+      // sendSearch();
+    }
+  };
+  const handleSearch = (e) => {
+    if (e.code === "Enter" || e.keyCode === 13) {
+      showSearch();
+    }
+  };
   return (
     <div className=" flex sm:justify-between  justify-center font-oswald px-5 sm:py-8 py-5">
       <div className=" sm:text-3xl  text-md font-bold hidden sm:inline-block">
@@ -15,8 +39,8 @@ const SearchNav = () => {
             name=""
             id=""
             className=" p-2 border-r border-gray-300 font-bold outline-none sm:flex hidden"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            // value={category}
+            onChange={(e) => setTempCategory(e.target.value)}
           >
             <option>All Category</option>
             <option>Laptops</option>
@@ -27,14 +51,16 @@ const SearchNav = () => {
           </select>
           <input
             type="text"
+            id="searchbox"
             placeholder="Search for Product..."
             className=" p-2 sm:w-80 outline-none w-60"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            // value={searchTerm}
+            onChange={(e) => setTempSearchTerm(e.target.value)}
+            onKeyDown={(e) => handleSearch(e)}
           />
           <button
             className=" text-slate-500 p-2 hover:text-blue-600"
-            onClick={console.log(category, searchTerm)}
+            onClick={showSearch}
           >
             <SearchIcon />
           </button>

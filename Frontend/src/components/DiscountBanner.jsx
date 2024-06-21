@@ -50,13 +50,13 @@ const DiscountBanner = ({
   ));
 
   return (
-    <div className="w-screen flex bg-slate-100 py-11 px-32 max-h-[1/16]">
+    <div className="w-screen flex bg-slate-100 py-11 px-32 min-h-[1/8] overflow-hidden justify-center gap-12 cursor-pointer ">
       <div className="text-7xl font-bold flex items-center">{discountName}</div>
       <div className="flex max-w-[1/16] ">
         <img
           src={productImage}
-          alt=""
-          className="max-w-full mix-blend-multiply rotate-12"
+          alt="prodcut image"
+          className=" w-full max-w-[1/8] max-h-64  mix-blend-multiply rotate-12 object-contain"
         />
       </div>
       <div className="flex flex-col p-10  justify-between gap-5">
@@ -64,8 +64,12 @@ const DiscountBanner = ({
           {timerComponents.length ? timerComponents : <span>Time's Up!</span>}
         </div>
         <div className=" flex flex-col  gap-3">
-          <span className=" font-bold text-2xl text-center text-slate-600">{productDesc}</span>
-          <span className="  font-bold text-5xl text-center">${productPrice}</span>
+          <span className=" font-bold text-2xl text-center text-slate-600">
+            {productDesc}
+          </span>
+          <span className="  font-bold text-5xl text-center">
+            ${productPrice}
+          </span>
         </div>
       </div>
     </div>

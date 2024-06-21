@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 const Navbar = ({ openmodal }) => {
   const location = useLocation();
   return (
-    <div className=" flex w-screen bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between">
+    <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between">
       <div className=" flex gap-7 items-center">
         <div className=" flex gap-2 items-center">
           <span
