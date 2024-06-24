@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -8,6 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Navbar = ({ openmodal }) => {
   const location = useLocation();
+  const [isUserLogin, setIsUserLogin] = useState(false);
   return (
     <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between">
       <div className=" flex gap-7 items-center">
@@ -48,15 +49,30 @@ const Navbar = ({ openmodal }) => {
         </div>
       </div>
       <div className=" flex items-center gap-3 mr-3">
-        <Link to="/favourites" className=" hidden sm:flex cursor-pointer ">
+        <Link
+          to="/favourites"
+          className=" hidden sm:flex cursor-pointer "
+          data-tooltip-id="my-account-tooltip"
+          data-tooltip-content="Favorites"
+        >
           <FavoriteBorderIcon />
         </Link>
 
-        <Link to="/cart" className="cursor-pointer flex">
+        <Link
+          to="/cart"
+          className="cursor-pointer flex"
+          data-tooltip-id="my-account-tooltip"
+          data-tooltip-content="Cart"
+        >
           <ShoppingCartOutlinedIcon />
         </Link>
 
-        <Link to="my-account" className="cursor-pointer flex">
+        <Link
+          to={isUserLogin ? "/my-account" : "/login"}
+          className="cursor-pointer flex"
+          data-tooltip-id="my-account-tooltip"
+          data-tooltip-content={isUserLogin ? "My Account" : "Login / Sign up"}
+        >
           <PersonOutlineOutlinedIcon />
         </Link>
       </div>

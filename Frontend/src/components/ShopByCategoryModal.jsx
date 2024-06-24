@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+// import { Link, Navigate } from "react-router-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-const ShopByCategoryModal = ({ open, close }) => {
+import { Link, Navigate, useNavigate } from "react-router-dom";
+const ShopByCategoryModal = ({ open, close, home }) => {
   const [isVisible, setIsVisible] = useState(false);
   const modalRoot = document.getElementById("portal");
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (open) {
       setIsVisible(true);
@@ -14,6 +16,8 @@ const ShopByCategoryModal = ({ open, close }) => {
       }, 300);
     }
   }, [open]);
+
+  const [isUserLogin, setIsUserLogin] = useState(false);
 
   if (!open && !isVisible) return null;
 
@@ -32,7 +36,13 @@ const ShopByCategoryModal = ({ open, close }) => {
       >
         <div className="  w-full">
           <div className="w-full flex justify-between bg-blue-700 p-4">
-            <span className=" text-3xl font-bold">ElectroWorld</span>
+            <Link
+              className=" text-3xl font-bold cursor-pointer"
+              onClick={close}
+              to={"/"}
+            >
+              ElectroWorld
+            </Link>
             <button onClick={close}>
               <CloseOutlinedIcon />
             </button>
@@ -61,7 +71,10 @@ const ShopByCategoryModal = ({ open, close }) => {
                 Categories
               </span>
               <div className="flex flex-col mt-1">
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
+                <span
+                  className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
+                  onClick={() => openFeaturePage("mobile-phones")}
+                >
                   Mobile Phones
                 </span>
                 <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
@@ -84,10 +97,20 @@ const ShopByCategoryModal = ({ open, close }) => {
                 Help & Account
               </span>
               <div className="flex flex-col mt-1">
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
-                  Your Account
-                </span>
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
+                <Link
+                  className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
+                  to={isUserLogin ? "/my-account" : "/login"}
+                  onClick={close}
+                >
+                  {isUserLogin ? "My account" : "Login"}
+                </Link>
+                <span
+                  className={
+                    isUserLogin
+                      ? " hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
+                      : " hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5 hidden"
+                  }
+                >
                   Sign Out
                 </span>
               </div>

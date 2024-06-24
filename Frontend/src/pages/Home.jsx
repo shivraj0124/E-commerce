@@ -53,7 +53,7 @@ const Home = () => {
           />
         </Slider>
       </div>
-      <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light">
+      <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
         <span className=" flex flex-col justify-center text-center items-center cursor-pointer">
           <PhoneIphoneIcon />
           Phone
