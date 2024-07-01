@@ -3,7 +3,7 @@ import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
   const [tempCategory, setTempCategory] = useState(category);
   const [tempSearchTerm, setTempSearchTerm] = useState(searchTerm);
@@ -13,7 +13,7 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
     if (tempSearchTerm.trim()) {
       const queryParams = new URLSearchParams({
         category,
-        keyword: searchTerm,
+        searchTerm,
       }).toString();
       setCategory(tempCategory);
       setSearchTerm(tempSearchTerm);
@@ -30,9 +30,12 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
   };
   return (
     <div className=" flex sm:justify-between  justify-center font-oswald px-5 sm:py-8 py-5">
-      <div className=" sm:text-3xl  text-md font-bold hidden sm:inline-block">
+      <Link
+        className=" sm:text-3xl  text-md font-bold hidden sm:inline-block"
+        to={"/"}
+      >
         ElectroWorld.
-      </div>
+      </Link>
       <div className=" flex items-center justify-center">
         <div className=" flex rounded border border-gray-300 overlflow-hidden  px-3  gap-4">
           <select

@@ -3,7 +3,7 @@ import { LoginBox, SignupBox } from "../components";
 import { useState } from "react";
 
 const Login = () => {
-  const [isLoginBox, setIsLoginBox] = useState(false);
+  const [isLoginBox, setIsLoginBox] = useState(true);
 
   const toggleLoginOption = () => {
     setIsLoginBox(!isLoginBox);

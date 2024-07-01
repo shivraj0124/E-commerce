@@ -6,7 +6,8 @@ dotenv.config();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-
+import product from './Models/Product'
+import users from './Models/User'
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
 app.use(

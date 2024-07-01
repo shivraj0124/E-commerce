@@ -28,7 +28,7 @@ const SignupBox = ({ showLoginBox }) => {
 
           <span className="  flex items-center justify-between w-full border-2 px-2">
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               required
               className="  outline-none rounded-md p-2"
@@ -38,6 +38,7 @@ const SignupBox = ({ showLoginBox }) => {
             <input
               type="number"
               placeholder="Phone"
+              min={10}
               required
               className="  outline-none rounded-md p-2 "
             />

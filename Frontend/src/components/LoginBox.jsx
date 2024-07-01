@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 const LoginBox = ({ setSignup }) => {
-    const [showPassword, setShowPassword] = useState(false);
-    const togglePasswordSeen = () => {
-      setShowPassword(!showPassword);
-    };
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordSeen = () => {
+    setShowPassword(!showPassword);
+  };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = () => {};
@@ -20,7 +20,7 @@ const LoginBox = ({ setSignup }) => {
         >
           <span className="  flex items-center justify-between w-full border-2 px-2">
             <input
-              type="text"
+              type="email"
               required
               placeholder="Email"
               value={email}
@@ -61,7 +61,9 @@ const LoginBox = ({ setSignup }) => {
       </div>
       <span className=" text-sm mt-2">
         New to ELECTRO STORE ?{" "}
-        <span className=" text-blue-600 cursor-pointer" onClick={setSignup}>Signup</span>
+        <span className=" text-blue-600 cursor-pointer" onClick={setSignup}>
+          Signup
+        </span>
       </span>
     </div>
   );

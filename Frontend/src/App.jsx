@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -24,7 +24,8 @@ import {
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PersonIcon from "@mui/icons-material/Person";
-
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 const App = ({ location }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
@@ -40,14 +41,32 @@ const App = ({ location }) => {
 
   const loginPage = location.pathname === "/login";
 
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const handleTheme = (e) => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
+  useEffect(() => {
+    document.querySelector("html").setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
   const [isUserLogin, setIsUserLogin] = useState(false);
   return (
     <div>
       {!loginPage && (
         <>
-          <div className="flex px-7 py-2 justify-center sm:justify-between bg-slate-100 text-gray-500 text-sm font-normal">
+          <div className="flex px-7 py-2 justify-center sm:justify-between bg-slate-100  text-gray-500 text-sm font-normal">
             <span>WELCOME TO ELECTRO STORE</span>
             <div className="sm:flex gap-4 hidden">
+              <span onClick={handleTheme} className=" cursor-pointer">
+                {theme === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+              </span>
               <span className="cursor-pointer hover:text-blue-600">
                 <LocationOnOutlinedIcon /> Store Locator
               </span>

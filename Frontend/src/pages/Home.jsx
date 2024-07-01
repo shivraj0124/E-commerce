@@ -21,7 +21,7 @@ const Home = () => {
     name: "50% Off on all iphones",
     image:
       "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT233?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1693248327138",
-    date: "2024-06-25",
+    date: "2024-06-30",
     price: 19.5,
     desc: "Iphone 13 pro max",
   };

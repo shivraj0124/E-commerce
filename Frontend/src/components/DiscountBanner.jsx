@@ -61,7 +61,7 @@ const DiscountBanner = ({
       </div>
       <div className="flex flex-col p-10  justify-between gap-5">
         <div className="flex space-x-2">
-          {timerComponents.length ? timerComponents : <span>Time's Up!</span>}
+          {timerComponents.length === 0 ? timerComponents : <span className=" text-center text-2xl font-bold">Time's Up!</span>}
         </div>
         <div className=" flex flex-col  gap-3">
           <span className=" font-bold text-2xl text-center text-slate-600">
