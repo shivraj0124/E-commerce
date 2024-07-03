@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchNav, Navbar } from "./components/index";
+import { SearchNav, Navbar } from "./Components/index";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   Offers,
