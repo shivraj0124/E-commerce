@@ -25,7 +25,6 @@ const protect = async (req, res, next) => {
 };
 
 const protect2 = async (req, res, next) => {
-  console.log(req.headers.authorization);
   let token;
   if (
     req.headers.authorization &&
@@ -47,4 +46,4 @@ const protect2 = async (req, res, next) => {
   }
 };
 
-(module.exports = protect), protect2;
+module.exports = { protect, protect2 };
