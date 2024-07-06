@@ -11,10 +11,10 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
 
 // Routes
-const authRoutes = require("./Routes/AuthRoutes")
-const adminRoutes = require("./Routes/AdminRoutes")
+const authRoutes = require("./Routes/AuthRoutes");
+const adminRoutes = require("./Routes/AdminRoutes");
 // const userRoutes = require("./Routes/UserRoutes")
-// const sellerRoutes = require("./Routes/SellerRoutes")
+const sellerRoutes = require("./Routes/SellerRoutes")
 
 app.use(
   cors({
@@ -40,7 +40,9 @@ app.post("/api/search", async (req, res) => {
 });
 const connectDB = async () => {
   try {
-    const connection = mongoose.connect(MONGO_URL);
+    const connection = mongoose.connect(MONGO_URL, {
+      serverSelectionTimeoutMS: 30000
+    });
     console.log("MongoDB Connected Successfully");
   } catch (err) {
     console.log("MongoDB not connected", err);
@@ -48,8 +50,8 @@ const connectDB = async () => {
 };
 connectDB();
 
-app.use("/api/v1/auth",authRoutes)
-app.use("/api/v1/admin",adminRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/admin", adminRoutes);
 // app.use("/api/v1/user",userRoutes)
-// app.use("/api/v1/seller",sellerRoutes)
+app.use("/api/v1/seller",sellerRoutes)
 app.listen(PORT, console.log("Server is Running", PORT));
