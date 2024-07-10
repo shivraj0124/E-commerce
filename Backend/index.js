@@ -13,7 +13,7 @@ const MONGO_URL = process.env.MONGO_URL;
 // Routes
 const authRoutes = require("./Routes/AuthRoutes");
 const adminRoutes = require("./Routes/AdminRoutes");
-// const userRoutes = require("./Routes/UserRoutes")
+const userRoutes = require("./Routes/UserRoutes")
 const sellerRoutes = require("./Routes/SellerRoutes")
 
 app.use(
@@ -52,6 +52,6 @@ connectDB();
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
-// app.use("/api/v1/user",userRoutes)
+app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/seller",sellerRoutes)
 app.listen(PORT, console.log("Server is Running", PORT));
