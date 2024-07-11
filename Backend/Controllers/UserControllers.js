@@ -7,122 +7,6 @@ const ReviewModel = require("../Models/ReviewModel");
 const LikeModel = require("../Models/LikeModel");
 const UserModel = require("../Models/UserModel");
 
-const getAllProducts = async (req, res) => {
-  try {
-    const products = await ProductModel.find()
-      .populate({
-        path: "reviews",
-        populate: {
-          path: "user",
-        },
-      })
-      .populate("discount");
-    if (products && products.length > 0) {
-      res.send({
-        success: true,
-        message: "Products fetched",
-        products,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "No Products Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-const getAllProductsByCategory = async (req, res) => {
-  try {
-    const { category } = req.body;
-    const products = await ProductModel.find({ category: category })
-      .populate({
-        path: "reviews",
-        populate: {
-          path: "user",
-        },
-      })
-      .populate("discount");
-    if (products && products.length > 0) {
-      res.send({
-        success: true,
-        message: "Products fetched",
-        products,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "No Products Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-const getSingleProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    console.log(productId);
-    const product = await ProductModel.find({ _id: productId })
-      .populate({
-        path: "reviews",
-        populate: {
-          path: "user",
-        },
-      })
-      .populate("discount");
-    if (product && product.length > 0) {
-      res.send({
-        success: true,
-        message: "Product fetched",
-        product,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "No Product Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-const getAllCategories = async (req, res) => {
-  try {
-    const categories = await CategoryModel.find();
-    if (categories && categories.length > 0) {
-      res.send({
-        success: true,
-        message: "Category fetched",
-        categories,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "Categories Not Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
 const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -137,58 +21,6 @@ const getAllLikesByUser = async (req, res) => {
       res.send({
         success: false,
         message: "Likes Not Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-const getAllLikesByProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const likes = await LikeModel.find({ product: productId }).populate(
-      "product"
-    );
-    if (likes && likes.length > 0) {
-      res.send({
-        success: true,
-        message: "Likes fetched",
-        likes,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "Likes Not Found ",
-      });
-    }
-  } catch (err) {
-    res.send({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-
-const getAllReviewsByProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const review = await ReviewModel.find({ product: productId }).populate(
-      "user"
-    );
-    if (review && review.length > 0) {
-      res.send({
-        success: true,
-        message: "Reviews fetched",
-        review,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "Reviews Not Found ",
       });
     }
   } catch (err) {
@@ -231,7 +63,9 @@ const addToCart = async (req, res) => {
 
     if (user) {
       // Check if the product is already in the cart
-      const isProductInCart = user.cart.some(cartItem => cartItem.product.toString() === productId);
+      const isProductInCart = user.cart.some(
+        (cartItem) => cartItem.product.toString() === productId
+      );
 
       if (isProductInCart) {
         return res.send({
@@ -264,7 +98,6 @@ const addToCart = async (req, res) => {
     });
   }
 };
-
 
 const addReview = async (req, res) => {
   try {
@@ -327,44 +160,86 @@ const addReview = async (req, res) => {
   }
 };
 
-const likeTheProduct = async (req, res) => {
+const likeDisLikeTheProduct = async (req, res) => {
   try {
     const { userId, productId } = req.body;
-    const like = new LikeModel({
+
+    // Check if the like already exists
+    const existingLike = await LikeModel.findOne({
       user: userId,
       product: productId,
     });
-    await like.save();
 
-    const getProduct = await ProductModel.findById(productId);
-    if (!getProduct) {
+    if (existingLike) {
+      // If like exists, remove it (dislike)
+      await LikeModel.findByIdAndDelete(existingLike._id);
+
+      const getProduct = await ProductModel.findById(productId);
+      if (!getProduct) {
+        return res.send({
+          success: false,
+          message: "Product Not Found.",
+        });
+      }
+
+      getProduct.likes.pull(existingLike._id);
+      await getProduct.save();
+
+      const getUser = await UserModel.findById(userId);
+      if (!getUser) {
+        return res.send({
+          success: false,
+          message: "User Not Found.",
+        });
+      }
+
+      getUser.likes.pull(existingLike._id);
+      await getUser.save();
+
       return res.send({
-        success: false,
-        message: "Product Not Found.",
+        success: true,
+        message: "Product Disliked Successfully.",
+        getProduct,
+        getUser,
+      });
+    } else {
+      // If like does not exist, create a new like
+      const like = new LikeModel({
+        user: userId,
+        product: productId,
+      });
+      await like.save();
+
+      const getProduct = await ProductModel.findById(productId);
+      if (!getProduct) {
+        return res.send({
+          success: false,
+          message: "Product Not Found.",
+        });
+      }
+
+      getProduct.likes.push(like._id);
+      await getProduct.save();
+
+      const getUser = await UserModel.findById(userId);
+      if (!getUser) {
+        return res.send({
+          success: false,
+          message: "User Not Found.",
+        });
+      }
+
+      getUser.likes.push(like._id);
+      await getUser.save();
+
+      return res.send({
+        success: true,
+        message: "Product Liked Successfully.",
+        like,
+        getProduct,
+        getUser,
       });
     }
-
-    getProduct.likes.push(like._id);
-    await getProduct.save();
-
-    const getUser = await UserModel.findById(userId);
-    if (!getUser) {
-      return res.send({
-        success: false,
-        message: "Seller Not Found.",
-      });
-    }
-
-    getUser.likes.push(like._id);
-    await getUser.save();
-
-    return res.send({
-      success: true,
-      message: "Review Uploaded Successfully.",
-      like,
-      getProduct,
-      getUser,
-    });
   } catch (err) {
     res.send({
       success: false,
@@ -373,16 +248,71 @@ const likeTheProduct = async (req, res) => {
   }
 };
 
+const editAddress = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { address, city, pinCode, state } = req.body;
+    const user = await UserModel.findById(userId);
+    if (user) {
+      user.shippingAddress.address = address;
+      user.shippingAddress.city = city;
+      user.shippingAddress.pinCode = pinCode;
+      user.shippingAddress.state = state;
+
+      await user.save();
+      return res.send({
+        success: true,
+        message: "Address Updated Successfully",
+        user,
+      });
+    } else {
+      return res.send({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+  } catch (err) {
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const updatePersonalInfo = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { name } = req.body;
+    const user = await UserModel.findById(userId);
+    if (user) {
+      user.name = name;
+
+      await user.save();
+      return res.send({
+        success: true,
+        message: "Address Updated Successfully",
+        user,
+      });
+    } else {
+      return res.send({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+  } catch (err) {
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
-  getAllProducts,
-  getAllProductsByCategory,
-  getSingleProduct,
-  getAllCategories,
   getAllLikesByUser,
   getAllReviewsByUser,
-  getAllReviewsByProduct,
-  getAllLikesByProduct,
   addToCart,
   addReview,
-  likeTheProduct,
+  likeDisLikeTheProduct,
+  editAddress,
+  updatePersonalInfo
 };

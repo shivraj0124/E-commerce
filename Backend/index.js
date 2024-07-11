@@ -15,6 +15,8 @@ const authRoutes = require("./Routes/AuthRoutes");
 const adminRoutes = require("./Routes/AdminRoutes");
 const userRoutes = require("./Routes/UserRoutes")
 const sellerRoutes = require("./Routes/SellerRoutes")
+const discountRoutes = require("./Routes/DiscounRoutes")
+const productRoutes = require("./Routes/ProductRoutes")
 
 app.use(
   cors({
@@ -54,4 +56,6 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/seller",sellerRoutes)
+app.use("/api/v1/discount",discountRoutes)
+app.use("/api/v1/product",productRoutes)
 app.listen(PORT, console.log("Server is Running", PORT));
