@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-// import { Link, Navigate } from "react-router-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
+import { ThemeContext } from "../ThemeContext";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 const ShopByCategoryModal = ({ open, close, home }) => {
   const [isVisible, setIsVisible] = useState(false);
   const modalRoot = document.getElementById("portal");
-  const navigate = useNavigate();
   useEffect(() => {
     if (open) {
       setIsVisible(true);
@@ -18,9 +19,9 @@ const ShopByCategoryModal = ({ open, close, home }) => {
   }, [open]);
 
   const [isUserLogin, setIsUserLogin] = useState(false);
-
+  const {theme , toggleTheme} = useContext(ThemeContext)
   if (!open && !isVisible) return null;
-
+  
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-start">
       <div
@@ -30,12 +31,24 @@ const ShopByCategoryModal = ({ open, close, home }) => {
         onClick={close}
       ></div>
       <div
-        className={`bg-blue-600 h-screen flex absolute text-white w-4/5 sm:w-1/5 transform transition-transform duration-300    ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={
+          theme === "dark"
+            ? `bg-blue-800 h-screen flex absolute text-white w-4/5 sm:w-1/5 transform transition-transform duration-300    ${
+                open ? "translate-x-0" : "-translate-x-full"
+              }`
+            : `bg-blue-600 h-screen flex absolute text-white w-4/5 sm:w-1/5 transform transition-transform duration-300    ${
+                open ? "translate-x-0" : "-translate-x-full"
+              }`
+        }
       >
         <div className="  w-full">
-          <div className="w-full flex justify-between bg-blue-700 p-4">
+          <div
+            className={
+              theme === "dark"
+                ? "w-full flex justify-between bg-blue-900 p-4"
+                : "w-full flex justify-between bg-blue-700 p-4"
+            }
+          >
             <Link
               className=" text-3xl font-bold cursor-pointer"
               onClick={close}
@@ -97,6 +110,17 @@ const ShopByCategoryModal = ({ open, close, home }) => {
                 Help & Account
               </span>
               <div className="flex flex-col mt-1">
+                <span
+                  className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5 flex items-center gap-2 "
+                  onClick={toggleTheme}
+                >
+                  {theme === "dark" ? "Light mode" : "Dark mode"}
+                  {theme === "dark" ? (
+                    <LightModeIcon className=" hover:text-yellow-400" />
+                  ) : (
+                    <DarkModeIcon className=" hover:text-purple-600" />
+                  )}
+                </span>
                 <Link
                   className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
                   to={isUserLogin ? "/my-account" : "/login"}
