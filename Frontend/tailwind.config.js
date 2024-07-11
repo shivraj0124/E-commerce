@@ -5,9 +5,11 @@ export default {
     extend: {
       fontFamily: {
         oswald: ["Oswald", "sans-serif"],
-        darkMode: "class",
       },
     },
+   
   },
-  plugins: [],
+  
+  plugins: [require("daisyui")],
+  darkMode: "class",
 };

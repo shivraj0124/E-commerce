@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined";
 import { Link, useLocation } from "react-router-dom";
+import { ThemeContext } from "../ThemeContext";
 
 const Navbar = ({ openmodal }) => {
   const location = useLocation();
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
   const [isUserLogin, setIsUserLogin] = useState(false);
   return (
     <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between">

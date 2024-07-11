@@ -214,7 +214,7 @@ const Search = ({ category, keyword }) => {
       >
         <div className=" p-5">
           <span className=" sm:text-2xl text-xl font-bold">
-            Showing Result for "{keyword}"
+            Showing Results for "{keyword}"
           </span>
           <div className="flex gap-4 font-semibold mt-2  flex-col sm:flex-row w-screen ">
             <span className=" font-semibold sm:font-medium text-xl sm:text-base">
