@@ -7,7 +7,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import { SearchNav, Navbar, ShopByCategoryModal } from "./components/index";
+import { SearchNav, Navbar, ShopByCategoryModal } from "./Components/index";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
 import { ThemeContext } from "./ThemeContext";

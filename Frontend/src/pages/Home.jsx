@@ -1,5 +1,5 @@
 import React from "react";
-import { DiscountBanner } from "../components";
+import { DiscountBanner } from "../Components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -8,12 +8,13 @@ import TabletAndroidIcon from "@mui/icons-material/TabletAndroid";
 import TvIcon from "@mui/icons-material/Tv";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import PowerIcon from "@mui/icons-material/Power";
+import img1 from "../Images/iphonediscount.png"
 const Home = () => {
   const Discount1 = {
     name: "Buy One Get One",
     image:
-      "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/45-nc-alum-pink-sport-loop-light-pink-s9?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1693282340775",
-    date: "2024-06-21",
+      "https://switch.com.ph/cdn/shop/files/ROSA_Apple_Watch_Ultra_2_LTE_49mm_Titanium_Blue_Black_Trail_Loop_PDP_Image_Position-1.jpg?v=1698388489&width=1000",
+    date: "2024-07-21",
     price: 13,
     desc: "Apple Watch series 6",
   };
@@ -21,7 +22,7 @@ const Home = () => {
     name: "50% Off on all iphones",
     image:
       "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT233?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1693248327138",
-    date: "2024-06-30",
+    date: "2024-07-30",
     price: 19.5,
     desc: "Iphone 13 pro max",
   };
@@ -34,8 +35,8 @@ const Home = () => {
     slidesToScroll: 1,
   };
   return (
-    <div>
-      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden">
+    <>
+      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] max-md:hidden">
         <Slider {...sliderSetting} className="">
           <DiscountBanner
             discountName={Discount1.name}
@@ -53,6 +54,25 @@ const Home = () => {
           />
         </Slider>
       </div>
+      <div className=" bg-slate-100 md:hidden flex-col  ">
+        <Slider {...sliderSetting} className="">
+          <DiscountBanner
+            discountName={Discount1.name}
+            discountDate={Discount1.date}
+            productImage={Discount1.image}
+            productPrice={Discount1.price}
+            productDesc={Discount1.desc}
+          />
+          <DiscountBanner
+            discountName={Discount2.name}
+            discountDate={Discount2.date}
+            productImage={Discount2.image}
+            productPrice={Discount2.price}
+            productDesc={Discount2.desc}
+          />
+        </Slider>
+      </div>
+
       <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
         <span className=" flex flex-col justify-center text-center items-center cursor-pointer">
           <PhoneIphoneIcon />
@@ -75,7 +95,7 @@ const Home = () => {
           Chargers & Powerbank
         </span>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { LoginBox, SignupBox } from "../components";
+import { LoginBox, SignupBox } from "../Components";
 import { useState } from "react";
 import { ThemeContext } from "../ThemeContext";
 

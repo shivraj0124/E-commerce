@@ -50,29 +50,74 @@ const DiscountBanner = ({
   ));
 
   return (
-    <div className="w-screen flex bg-slate-100 py-11 px-32 min-h-[1/8] overflow-hidden justify-center gap-12 cursor-pointer ">
-      <div className="text-7xl font-bold flex items-center">{discountName}</div>
-      <div className="flex max-w-[1/16] ">
-        <img
-          src={productImage}
-          alt="prodcut image"
-          className=" w-full max-w-[1/8] max-h-64  mix-blend-multiply rotate-12 object-contain"
-        />
-      </div>
-      <div className="flex flex-col p-10  justify-between gap-5">
-        <div className="flex space-x-2">
-          {timerComponents.length === 0 ? timerComponents : <span className=" text-center text-2xl font-bold">Time's Up!</span>}
+    <>
+      {" "}
+      <div className="w-screen max-md:hidden flex bg-slate-100 py-11 px-32 min-h-[1/8] overflow-hidden justify-center gap-12 cursor-pointer ">
+        <div className="text-7xl font-bold flex items-center">
+          {discountName}
         </div>
-        <div className=" flex flex-col  gap-3">
-          <span className=" font-bold text-2xl text-center text-slate-600">
-            {productDesc}
-          </span>
-          <span className="  font-bold text-5xl text-center">
-            ${productPrice}
-          </span>
+        <div className="flex max-w-[1/16] ">
+          <img
+            src={productImage}
+            alt="prodcut image"
+            className=" w-full max-w-[1/8] max-h-64  mix-blend-multiply rotate-12 object-contain"
+          />
+        </div>
+        <div className="flex flex-col p-10  justify-between gap-5">
+          <div className="flex space-x-2">
+            {timerComponents.length === 0 ? (
+              timerComponents
+            ) : (
+              <span className=" text-center text-2xl font-bold">
+                Time's Up!
+              </span>
+            )}
+          </div>
+          <div className=" flex flex-col  gap-3">
+            <span className=" font-bold text-2xl text-center text-slate-600">
+              {productDesc}
+            </span>
+            <span className="  font-bold text-5xl text-center">
+              ${productPrice}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="px-5 py-2 w-full md:hidden flex justify-between bg-slate-100  overflow-hidden   cursor-pointer ">
+        <div className="flex flex-col  ">
+          <div className="text-xl font-bold flex text-black">
+            {discountName}
+          </div>
+
+          <div className="flex flex-col w-full justify-between gap-5">
+            <div className="flex space-x-2">
+              {timerComponents.length === 0 ? (
+                timerComponents
+              ) : (
+                <span className=" text-center text-xl font-bold">
+                  Time's Up!
+                </span>
+              )}
+            </div>
+            <div className=" flex flex-col w-max">
+              <span className=" font-bold text-xl text-center text-slate-600">
+                {productDesc}
+              </span>
+              <span className="  font-bold text-xl text-left text-black">
+                ${productPrice}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex  ">
+          <img
+            src={productImage}
+            alt="prodcut image"
+            className="h-[180px]  mix-blend-multiply rotate-12 object-contain"
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
