@@ -41,35 +41,49 @@ const DiscountBanner = ({
   const timerComponents = Object.keys(timeLeft).map((interval) => (
     <div
       key={interval}
-      className="flex flex-col items-center bg-white text-center p-3 rounded-lg border-slate-300 border-4"
+      className="flex flex-col items-center bg-white text-center sm:p-3 rounded-lg border-slate-300 sm:border-4 border p-2 "
     >
-      <div className="text-sm">{interval.toUpperCase()}</div>
+      <div>
+        <div className="text-xs ">{interval.toUpperCase()}</div>
 
-      <div className="text-4xl font-bold">{timeLeft[interval]}</div>
+        <div className="sm:text-4xl font-bold text-xs">
+          {timeLeft[interval]}
+        </div>
+      </div>
     </div>
   ));
 
   return (
-    <div className="w-screen flex bg-slate-100 py-11 px-32 min-h-[1/8] overflow-hidden justify-center gap-12 cursor-pointer ">
-      <div className="text-7xl font-bold flex items-center">{discountName}</div>
-      <div className="flex max-w-[1/16] ">
-        <img
-          src={productImage}
-          alt="prodcut image"
-          className=" w-full max-w-[1/8] max-h-64  mix-blend-multiply rotate-12 object-contain"
-        />
+    <div className="w-screen flex bg-slate-100 sm:py-8 sm:px-32 sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full p-6">
+      <div className="sm:text-7xl font-bold flex items-center text-3xl text-center mb-6 sm:mb-0">
+        {discountName}
       </div>
-      <div className="flex flex-col p-10  justify-between gap-5">
-        <div className="flex space-x-2">
-          {timerComponents.length === 0 ? timerComponents : <span className=" text-center text-2xl font-bold">Time's Up!</span>}
+      <div className="flex flex-col sm:flex-row items-center sm:gap-12  -ml-6  ">
+        <div className="w-full sm:w-auto max-w-xs sm:max-w-[1/8] sm:max-h-64 mb-4 sm:mb-0 -ml-16  flex items-center justify-center">
+          <img
+            src={productImage}
+            alt="product image"
+            className="w-3/4 h-auto sm:max-w-[1/8] sm:max-h-64 mix-blend-multiply rotate-12 object-contain "
+          />
         </div>
-        <div className=" flex flex-col  gap-3">
-          <span className=" font-bold text-2xl text-center text-slate-600">
-            {productDesc}
-          </span>
-          <span className="  font-bold text-5xl text-center">
-            ${productPrice}
-          </span>
+        <div className="flex flex-col p-10 justify-between gap-5 w-full sm:w-auto items-center -ml-16">
+          <div className="flex space-x-2 items-center justify-center text-center ">
+            {timerComponents.length === 0 ? (
+              <span className="text-center text-2xl font-bold flex items-center">
+                Time's Up!
+              </span>
+            ) : (
+              timerComponents
+            )}
+          </div>
+          <div className="flex sm:flex-col gap-3 text-center items-center">
+            <span className="font-bold sm:text-2xl text-center text-slate-600 text-xl">
+              {productDesc}
+            </span>
+            <span className="font-bold sm:text-5xl text-center text-3xl">
+              ${productPrice}
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -123,7 +123,7 @@ const ShopByCategoryModal = ({ open, close, home }) => {
                 </span>
                 <Link
                   className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
-                  to={isUserLogin ? "/my-account" : "/login"}
+                  to={isUserLogin ? "/my-account" : "/auth"}
                   onClick={close}
                 >
                   {isUserLogin ? "My account" : "Login"}

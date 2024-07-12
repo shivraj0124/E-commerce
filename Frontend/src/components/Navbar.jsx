@@ -13,7 +13,7 @@ const Navbar = ({ openmodal }) => {
 
   const [isUserLogin, setIsUserLogin] = useState(false);
   return (
-    <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between">
+    <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between dark:bg-blue-700">
       <div className=" flex gap-7 items-center">
         <div className=" flex gap-2 items-center">
           <span
@@ -26,24 +26,30 @@ const Navbar = ({ openmodal }) => {
         </div>
         <div className=" hidden sm:flex gap-3 h-full">
           <Link
-            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer ${
-              location.pathname === "/" ? "bg-blue-700" : "bg-blue-600"
+            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer  hover:dark:bg-blue-800 ${
+              location.pathname === "/"
+                ? "bg-blue-700 dark:bg-blue-800"
+                : "bg-blue-600 dark:bg-blue-700"
             }`}
             to="/"
           >
             Home
           </Link>
           <Link
-            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer ${
-              location.pathname === "/offers" ? "bg-blue-700" : "bg-blue-600"
+            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer  hover:dark:bg-blue-800 ${
+              location.pathname === "/offers"
+                ? "bg-blue-700 dark:bg-blue-800"
+                : "bg-blue-600 dark:bg-blue-700"
             }`}
             to="/offers"
           >
             Offers
           </Link>
           <Link
-            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer ${
-              location.pathname === "/buy-again" ? "bg-blue-700" : "bg-blue-600"
+            className={` hover:bg-blue-700 inline-block py-4 h-full px-4 cursor-pointer  hover:dark:bg-blue-800 ${
+              location.pathname === "/buy-again"
+                ? "bg-blue-700 dark:bg-blue-800"
+                : "bg-blue-600 dark:bg-blue-700"
             }`}
             to="/buy-again"
           >
@@ -71,7 +77,7 @@ const Navbar = ({ openmodal }) => {
         </Link>
 
         <Link
-          to={isUserLogin ? "/my-account" : "/login"}
+          to={isUserLogin ? "/my-account" : "/auth/login"}
           className="cursor-pointer flex"
           data-tooltip-id="my-account-tooltip"
           data-tooltip-content={isUserLogin ? "My Account" : "Login / Sign up"}

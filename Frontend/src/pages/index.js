@@ -5,4 +5,4 @@ export { default as AboutUser } from "./AboutUser.jsx";
 export { default as Cart } from "./Cart.jsx";
 export { default as UserFavourite } from "./UserFavourite.jsx";
 export { default as Search } from "./Search.jsx";
-export { default as Login } from "./Login.jsx";
+export { default as Authentication } from "./Authentication.jsx";

@@ -37,11 +37,11 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
         ElectroWorld.
       </Link>
       <div className=" flex items-center justify-center">
-        <div className=" flex rounded border border-gray-300 overlflow-hidden    ">
+        <div className=" flex rounded border-2 border-gray-300 ">
           <select
             name=""
             id=""
-            className=" p-2 border-r border-gray-300 font-bold outline-none sm:flex hidden px-3"
+            className=" p-2 border-r border-gray-300 font-bold outline-none sm:flex px-3 w-20 sm:w-1/2 text-xs sm:text-base"
             // value={category}
             onChange={(e) => setTempCategory(e.target.value)}
           >
@@ -56,7 +56,7 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
             type="text"
             id="searchbox"
             placeholder="Search for Product..."
-            className=" px-4 sm:w-80 outline-none w-60"
+            className=" px-4 sm:w-80 outline-none w-40 placeholder:text-xs"
             // value={searchTerm}
             onChange={(e) => setTempSearchTerm(e.target.value)}
             onKeyDown={(e) => handleSearch(e)}
