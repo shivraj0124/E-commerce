@@ -23,6 +23,7 @@ const Home = () => {
     image:
       "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT233?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1693248327138",
     date: "2024-07-30",
+    date: "2024-07-30",
     price: 19.5,
     desc: "Iphone 13 pro max",
   };
@@ -36,9 +37,10 @@ const Home = () => {
   };
   return (
     <>
-      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] max-md:hidden">
+      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden">
         <Slider {...sliderSetting} className="">
           <DiscountBanner
+          
             discountName={Discount1.name}
             discountDate={Discount1.date}
             productImage={Discount1.image}
@@ -54,9 +56,11 @@ const Home = () => {
           />
         </Slider>
       </div>
-      <div className=" bg-slate-100 md:hidden flex-col  ">
+      
+      <div className=" bg-slate-100 flex flex-col md:hidden">
         <Slider {...sliderSetting} className="">
           <DiscountBanner
+          
             discountName={Discount1.name}
             discountDate={Discount1.date}
             productImage={Discount1.image}
@@ -75,7 +79,7 @@ const Home = () => {
 
       <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
         <span className=" flex flex-col justify-center text-center items-center cursor-pointer">
-          <PhoneIphoneIcon />
+          <PhoneIphoneIcon fontSize="large"/>
           Phone
         </span>
         <span className=" flex flex-col justify-center text-center items-center gap-2 cursor-pointer">

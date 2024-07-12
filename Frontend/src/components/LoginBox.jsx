@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Link } from "react-router-dom";
 const LoginBox = ({ setSignup }) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSeen = () => {
@@ -8,9 +9,11 @@ const LoginBox = ({ setSignup }) => {
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleLogin = () => {};
+  const handleLogin = (e) => {
+    e.preventDefault();
+  };
   return (
-    <div className=" bg-white text-black h-1/2 sm:w-1/4 rounded-lg -mt-10 flex flex-col overflow-hidden pt-6 items-center">
+    <div className=" bg-white text-black h-1/2 sm:w-1/4 rounded-lg -mt-10 flex flex-col overflow-hidden pt-6 items-center  dark:bg-[#121212] dark:text-white">
       <span className=" text-center font-bold   text-3xl">Login</span>
 
       <div className=" flex flex-col justify-center w-full p-2 mt-8 px-12 gap-6">
@@ -18,14 +21,14 @@ const LoginBox = ({ setSignup }) => {
           onSubmit={handleLogin}
           className=" flex gap-4 flex-col items-center"
         >
-          <span className="  flex items-center justify-between w-full border-2 px-2">
+          <span className="  flex items-center justify-between w-full border-2 px-2 ">
             <input
               type="email"
               required
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="   outline-none rounded-md p-2"
+              className="   outline-none rounded-md p-2 bg-white dark:bg-[#121212]"
             />
           </span>
 
@@ -36,7 +39,7 @@ const LoginBox = ({ setSignup }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="   outline-none rounded-md p-2"
+              className="   outline-none rounded-md p-2 bg-white dark:bg-[#121212]"
             />
             <span
               className=" text-gray-600 cursor-pointer hover:text-gray-700"
@@ -61,9 +64,12 @@ const LoginBox = ({ setSignup }) => {
       </div>
       <span className=" text-sm mt-2">
         New to ELECTRO STORE ?{" "}
-        <span className=" text-blue-600 cursor-pointer" onClick={setSignup}>
+        <Link
+          className=" text-blue-600 cursor-pointer"
+          to={"/auth/register-user"}
+        >
           Signup
-        </span>
+        </Link>
       </span>
     </div>
   );

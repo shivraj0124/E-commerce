@@ -7,7 +7,13 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import { SearchNav, Navbar, ShopByCategoryModal } from "./Components/index";
+import {
+  SearchNav,
+  Navbar,
+  ShopByCategoryModal,
+  LoginBox,
+  UserSignupBox,
+} from "./Components/index";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
 import { ThemeContext } from "./ThemeContext";
@@ -19,8 +25,9 @@ import {
   Cart,
   UserFavourite,
   Search,
-  Login,
+  Authentication,
 } from "./pages/index";
+
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PersonIcon from "@mui/icons-material/Person";
@@ -40,14 +47,12 @@ const App = ({ location }) => {
     <Navigate to="/" />;
   };
 
-  const loginPage = location.pathname === "/login";
-
+  const homePage = location.pathname === "/";
   const { theme, toggleTheme } = useContext(ThemeContext);
-
   const [isUserLogin, setIsUserLogin] = useState(false);
   return (
     <div>
-      {!loginPage && (
+      {homePage && (
         <>
           <div
             className={`flex px-7 py-2 justify-center sm:justify-between  text-text text-sm font-normal flex-col sm:flex-row bg-slate-100 dark:bg-slate-800 dark:text-slate-100`}
@@ -55,16 +60,20 @@ const App = ({ location }) => {
             <span className=" text-center">WELCOME TO ELECTRO STORE</span>
             <div className="sm:flex gap-4 text-xs sm:text-base hidden">
               <span onClick={toggleTheme} className=" cursor-pointer ">
-                {theme === "dark" ? <LightModeIcon className=" hover:text-yellow-400"/> : <DarkModeIcon className=" hover:text-purple-600"/>}
+                {theme === "dark" ? (
+                  <LightModeIcon className=" hover:text-yellow-400" />
+                ) : (
+                  <DarkModeIcon className=" hover:text-purple-600" />
+                )}
               </span>
-              <span className="cursor-pointer hover:text-blue ">
+              <span className="cursor-pointer hover:text-blue-600 ">
                 <LocationOnOutlinedIcon /> Store Locator
               </span>
-              <span className="cursor-pointer hover:text-blue">
+              <span className="cursor-pointer hover:text-blue-600">
                 <LocalShippingOutlinedIcon /> Free Shipping & Returns
               </span>
-              <span className="cursor-pointer hover:text-blue">
-                <Link to={isUserLogin ? "/my-account" : "/login"}>
+              <span className="cursor-pointer hover:text-blue-600">
+                <Link to={isUserLogin ? "/my-account" : "/auth/login"}>
                   <PersonIcon /> {isUserLogin ? "My Account" : "Login"}
                 </Link>
               </span>
@@ -82,21 +91,26 @@ const App = ({ location }) => {
       )}
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/offers" element={<Offers />} />
-        <Route path="/buy-again" element={<BuyAgain />} />
-        <Route path="/my-account" element={<AboutUser />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/favourites" element={<UserFavourite />} />
-        <Route
-          path="/search"
-          element={<Search category={category} keyword={searchTerm} />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/" element={<Home />}>
+          <Route index element={<Home />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/buy-again" element={<BuyAgain />} />
+          <Route path="/my-account" element={<AboutUser />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/favourites" element={<UserFavourite />} />
+          <Route
+            path="/search"
+            element={<Search category={category} keyword={searchTerm} />}
+          />
+        </Route>
+        <Route path="/auth" element={<Authentication />}>
+          <Route index element={<LoginBox />} />
+          <Route path="login" element={<LoginBox />} />
+          <Route path="register-user" element={<UserSignupBox />} />
+        </Route>
       </Routes>
 
-      {!loginPage && (
+      {homePage && (
         <ShopByCategoryModal
           open={isModalOpen}
           close={() => setIsModalOpen(false)}
