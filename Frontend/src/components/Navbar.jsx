@@ -5,7 +5,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined";
 import { Link, useLocation } from "react-router-dom";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "./Context/ThemeContext";
 
 const Navbar = ({ openmodal }) => {
   const location = useLocation();

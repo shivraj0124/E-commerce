@@ -67,7 +67,7 @@ const DiscountBanner = ({
               className="w-3/4 h-auto sm:max-w-[1/8] sm:max-h-64 mix-blend-multiply rotate-12 object-contain "
             />
           </div>
-          <div className="flex flex-col p-10 justify-between gap-5 w-full sm:w-auto items-center -ml-16">
+          <div className="flex flex-col p-10 justify-between gap-5 w-full sm:w-auto items-center -ml-16 ">
             <div className="flex space-x-2 items-center justify-center text-center ">
               {timerComponents.length === 0 ? (
                 <span className="text-center text-2xl font-bold flex items-center">

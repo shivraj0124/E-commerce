@@ -13,10 +13,11 @@ import {
   ShopByCategoryModal,
   LoginBox,
   UserSignupBox,
-} from "./Components/index";
+  SellerSignupBox,
+} from "./Components/index.js";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "./Components/Context/ThemeContext.jsx";
 import {
   Offers,
   Home,
@@ -26,7 +27,7 @@ import {
   UserFavourite,
   Search,
   Authentication,
-} from "./pages/index";
+} from "./pages/index.js";
 
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
@@ -103,10 +104,11 @@ const App = ({ location }) => {
             element={<Search category={category} keyword={searchTerm} />}
           />
         </Route>
-        <Route path="/auth" element={<Authentication />}>
+        <Route path="auth" element={<Authentication />}>
           <Route index element={<LoginBox />} />
           <Route path="login" element={<LoginBox />} />
           <Route path="register-user" element={<UserSignupBox />} />
+          <Route path="register-seller" element={<SellerSignupBox />} />
         </Route>
       </Routes>
 

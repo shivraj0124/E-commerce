@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Link,  useNavigate } from "react-router-dom";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "./Context/ThemeContext";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 const ShopByCategoryModal = ({ open, close, home }) => {
