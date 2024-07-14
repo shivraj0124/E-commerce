@@ -24,22 +24,7 @@ app.use(
   })
 );
 
-app.post("/api/search", async (req, res) => {
-  try {
-    const { category, keyword } = req.body;
-    console.log(category, keyword);
-    res.send({
-      status: true,
-      message: `search term is ${category} , ${keyword}`,
-    });
-  } catch (error) {
-    console.log(error);
-    res.send({
-      status: false,
-      message: "Sent  failed",
-    });
-  }
-});
+
 const connectDB = async () => {
   try {
     const connection = mongoose.connect(MONGO_URL, {

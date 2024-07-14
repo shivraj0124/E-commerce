@@ -129,7 +129,8 @@ const signupController = async (req, res) => {
 
     await user.save();
     return res.send({
-      success: false,
+      
+      success: true,
       message: "Account Created Successfully. Login first to Continue",
     });
   } catch (err) {
@@ -142,9 +143,24 @@ const signupController = async (req, res) => {
 
 const registerSeller = async (req, res) => {
   try {
-    let { name, email, password, mobile, storeName, storeDescription } =
-      req.body;
-    console.log(name, email, password, mobile);
+    let {
+      name,
+      email,
+      password,
+      mobile,
+      storeName,
+      storeDescription,
+      storeAddress,
+    } = req.body;
+    console.log(
+      name,
+      email,
+      password,
+      mobile,
+      storeName,
+      storeDescription,
+      storeAddress
+    );
 
     if (!email) {
       return res.send({
@@ -211,7 +227,7 @@ const registerSeller = async (req, res) => {
 
     await user.save();
     return res.send({
-      success: false,
+      success: true,
       message: "Account Created Successfully. Login first to Continue.",
     });
   } catch (err) {
