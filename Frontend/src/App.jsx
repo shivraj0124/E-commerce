@@ -33,7 +33,8 @@ import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined
 import PersonIcon from "@mui/icons-material/Person";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
-
+// admin components
+import MainAdminContainer from "./Components/AdminDashboard/MainAdminContainer";
 const App = ({ location }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
@@ -107,6 +108,9 @@ const App = ({ location }) => {
           <Route index element={<LoginBox />} />
           <Route path="login" element={<LoginBox />} />
           <Route path="register-user" element={<UserSignupBox />} />
+        </Route>
+        <Route path="/admin">
+          <Route path="/admin/dashboard" element={<MainAdminContainer />} />
         </Route>
       </Routes>
 
