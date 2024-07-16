@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { DiscountBanner } from "../Components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -8,7 +8,8 @@ import TabletAndroidIcon from "@mui/icons-material/TabletAndroid";
 import TvIcon from "@mui/icons-material/Tv";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import PowerIcon from "@mui/icons-material/Power";
-import img1 from "../Images/iphonediscount.png"
+import { AuthContext } from "../Components/Context/AuthContext.jsx";
+
 const Home = () => {
   const Discount1 = {
     name: "Buy One Get One",
@@ -35,9 +36,10 @@ const Home = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  
   return (
     <>
-      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden">
+      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden ">
         <Slider {...sliderSetting} className="">
           <DiscountBanner
           
@@ -57,7 +59,7 @@ const Home = () => {
         </Slider>
       </div>
       
-      <div className=" bg-slate-100 flex flex-col md:hidden">
+      <div className=" bg-slate-100 flex flex-col md:hidden ">
         <Slider {...sliderSetting} className="">
           <DiscountBanner
           
@@ -78,7 +80,7 @@ const Home = () => {
       </div>
 
       <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
-        <span className=" flex flex-col justify-center text-center items-center cursor-pointer">
+        <span className=" flex flex-col justify-center text-center items-center cursor-pointer ">
           <PhoneIphoneIcon fontSize="large"/>
           Phone
         </span>

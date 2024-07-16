@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
+import cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
-
+import { AuthContext } from "./Context/AuthContext";
 const LoginBox = () => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSeen = () => {
@@ -18,6 +19,8 @@ const LoginBox = () => {
   const signupSuccessfully = () => {
     toast.success("Login Successfully!!!");
   };
+  const { setToken, setIsLogin, setUserDetails, userDetails } =
+    useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -38,9 +41,14 @@ const LoginBox = () => {
       );
       if (response.data.success) {
         signupSuccessfully();
+        cookies.set("token", response.data.token, { expires: 30 });
+        setToken(cookies.get("token"));
+        setUserDetails(response.data.user);
+        
+        setIsLogin(true);
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 1500);
       } else {
         toast.error(response.data.message);
       }
@@ -48,6 +56,7 @@ const LoginBox = () => {
       console.error(error);
       toast.error("Something went wrong. Please try again.");
     }
+    setLoading(false);
   };
 
   return (

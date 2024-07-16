@@ -63,13 +63,15 @@ const Search = ({ category, keyword }) => {
 
   const toggleFiterOption = () => {
     showFiltersOption(!filtersOption);
+    showSortOption(false)
   };
   const toggleSortOption = () => {
     showSortOption(!sortOption);
+    showFiltersOption(false)
   };
   return (
-    <div className=" p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col">
-      <div className=" flex justify-between px-3 py-1 sm:hidden w-full gap-2 h-full">
+    <div className=" p-1 bg-slate-200 flex w-screen overflow-x-hidden h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] ">
+      <div className=" flex justify-between px-3 py-1 sm:hidden w-full gap-2 h-full dark:bg-slate-800">
         <button
           className={
             filtersOption === false
@@ -94,29 +96,31 @@ const Search = ({ category, keyword }) => {
       <div
         className={
           filtersOption
-            ? " sm:w-80 pl-6  py-6  border-4 shadow-xl bg-white pr-6"
-            : " sm:w-80 pl-6  py-6  border-4 shadow-xl bg-white pr-6 hidden sm:flex flex-col"
+            ? " sm:w-80 pl-6  py-6  border-4 dark:border-gray-700 shadow-xl bg-white pr-6 dark:bg-slate-800"
+            : " sm:w-80 pl-6  py-6  border-4 dark:border-gray-700  shadow-xl bg-white pr-6 hidden sm:flex flex-col dark:bg-slate-800"
         }
       >
         <span className=" flex flex-col gap-1">
-          <span className=" text-xl font-bold text-black">Categories</span>
-          <span className=" text-gray-600 text-md">Mobile Phones</span>
+          <span className=" text-xl font-bold ">Categories</span>
+          <span className=" font-semibold text-md ">Mobile Phones</span>
         </span>
         <div className=" flex flex-col gap-4 ">
           <div className="mt-8">
-            <span className=" text-xl font-bold text-black ">Price Range</span>
-            <span className=" flex flex-col">
-              <Box sx={{ width: 250 }}>
+            <span className=" text-xl font-bold  ">Price Range</span>
+            <span className=" flex flex-col dark:text-white ">
+              <Box sx={{ width: 250, } }>
                 <Slider
                   getAriaLabel={() => "Price Range"}
                   value={value}
                   onChange={handleChange}
                   valueLabelDisplay="auto"
                   getAriaValueText={valuetext}
+                  
                 />
               </Box>
-              <div className=" flex w-full gap-2">
+              <div className=" flex w-full gap-2 text-white">
                 <TextField
+                  className=" text-white"
                   id="outlined-number"
                   label="Min"
                   type="number"
@@ -143,7 +147,7 @@ const Search = ({ category, keyword }) => {
           </div>
 
           <div className=" flex flex-col ">
-            <span className=" text-xl font-bold text-black">
+            <span className=" text-xl font-bold ">
               Customer Ratings
             </span>
             <span className=" flex gap-2 text-center items-center">
@@ -169,10 +173,10 @@ const Search = ({ category, keyword }) => {
           </div>
           <div>
             {" "}
-            <span className=" text-xl font-bold text-black"></span>
+            <span className=" text-xl font-bold "></span>
           </div>
           <div>
-            <span className=" text-xl font-bold text-black">Brands</span>
+            <span className=" text-xl font-bold ">Brands</span>
             <div>
               <div>
                 <input
@@ -182,7 +186,7 @@ const Search = ({ category, keyword }) => {
                   value={brandName}
                   onChange={handleBrandName}
                   placeholder="Search Brand"
-                  className=" outline-none border-b border-black"
+                  className=" outline-none border-b border-black dark:border-white bg-transparent font-bold mt-1"
                 />
                 <button className=" text-slate-500 hover:text-blue-600 ">
                   <SearchIcon />
@@ -208,11 +212,11 @@ const Search = ({ category, keyword }) => {
       <div
         className={
           sortOption
-            ? " flex justify-start bg-white w-screen shadow-xl border-4 "
-            : " sm:flex justify-start bg-white w-screen shadow-xl border-4 hidden"
+            ? " flex justify-start bg-white w-full shadow-xl border-4 dark:border-gray-600"
+            : " sm:flex justify-start bg-white w-full shadow-xl border-4 hidden dark:border-gray-600"
         }
       >
-        <div className=" p-5">
+        <div className=" p-5 w-screen dark:bg-slate-800">
           <span className=" sm:text-2xl text-xl font-bold">
             Showing Results for "{keyword}"
           </span>

@@ -129,7 +129,6 @@ const signupController = async (req, res) => {
 
     await user.save();
     return res.send({
-      
       success: true,
       message: "Account Created Successfully. Login first to Continue",
     });
@@ -237,9 +236,22 @@ const registerSeller = async (req, res) => {
     });
   }
 };
+const verifyToken = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "Token is valid",
+      user: req.user,
+    });
+    console.log(req.user);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 module.exports = {
   loginController,
   signupController,
   registerSeller,
+  verifyToken,
 };

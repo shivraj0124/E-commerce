@@ -41,10 +41,12 @@ const DiscountBanner = ({
   const timerComponents = Object.keys(timeLeft).map((interval) => (
     <div
       key={interval}
-      className="flex flex-col max-md:text-gray-600  max-md:font-bold max-md:border-gray-400 items-center bg-white text-center sm:p-3 rounded-lg border-slate-300 sm:border-4 border-2 p-2 "
+      className="flex flex-col max-md:text-gray-600  max-md:font-bold max-md:border-gray-400 items-center bg-white text-center sm:p-3 rounded-lg border-slate-300 sm:border-4 border-2 p-2"
     >
-      <div>
-        <div className="text-xs max-md:text-[14px] ">{interval.toUpperCase()}</div>
+      <div className="">
+        <div className="text-xs max-md:text-[14px] ">
+          {interval.toUpperCase()}
+        </div>
 
         <div className="sm:text-4xl font-bold text-xs max-md:text-sm">
           {timeLeft[interval]}
@@ -88,8 +90,7 @@ const DiscountBanner = ({
           </div>
         </div>
       </div>
-
-      {/* For Mobile Screen */}
+      
       <div className="px-3 pt-2 w-full md:hidden flex justify-between bg-slate-100  overflow-hidden   cursor-pointer ">
         <div className="flex flex-col w-[50%] ">
           <div className="text-xl font-bold flex text-black">
@@ -98,12 +99,14 @@ const DiscountBanner = ({
 
           <div className="flex flex-col w-full justify-between gap-5 mt-2">
             <div className="flex gap-x-2 ">
-            {timerComponents.length === 0 ? (
+              {timerComponents.length === 0 ? (
                 <span className="text-center text-2xl font-bold flex items-center">
                   Time's Up!
                 </span>
               ) : (
-                timerComponents
+                <span className=" grid grid-cols-2 gap-2  ">
+                  {timerComponents}
+                </span>
               )}
             </div>
             <div className=" flex flex-col w-max">
@@ -116,7 +119,7 @@ const DiscountBanner = ({
             </div>
           </div>
         </div>
-        <div className="flex ">
+        <div className="flex  items-center">
           <img
             src={productImage}
             alt="prodcut image"
