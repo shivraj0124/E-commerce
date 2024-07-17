@@ -29,6 +29,7 @@ import {
   Authentication,
 } from "./pages/index.js";
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
+import  {ProductProvider } from "./Components/Context/ProductContext.jsx";
 
 const App = ({ location }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,51 +45,34 @@ const App = ({ location }) => {
   const isAuth = location.pathname.startsWith("/auth");
 
   return (
-    <AuthProvider>
-      <div>
-        {/* {!isAuth && (
-          <>
-            <TopNav />
-            <SearchNav
-              category={category}
-              searchTerm={searchTerm}
-              setCategory={setCategory}
-              setSearchTerm={setSearchTerm}
-            />
-            <Tooltip id="my-account-tooltip" />
-            <Navbar openmodal={handleModal} />
-          </>
-        )} */}
+    <ProductProvider>
+      <AuthProvider>
+        <div>
+          <Routes>
+            <Route path="/" element={<TopLayout />}>
+              <Route exact path="/" element={<Home />} />
 
-        <Routes>
-          <Route path="/" element={<TopLayout />}>
-            <Route exact path="/" element={<Home />} />
+              <Route exact path="/offers" element={<Offers />} />
+              <Route exact path="/buy-again" element={<BuyAgain />} />
+              <Route exact path="/my-account" element={<AboutUser />} />
+              <Route exact path="/cart" element={<Cart />} />
+              <Route exact path="/favourites" element={<UserFavourite />} />
+              <Route
+                path="/search"
+                element={<Search category={category} keyword={searchTerm} />}
+              />
+            </Route>
 
-            <Route exact path="/offers" element={<Offers />} />
-            <Route exact path="/buy-again" element={<BuyAgain />} />
-            <Route exact path="/my-account" element={<AboutUser />} />
-            <Route exact path="/cart" element={<Cart />} />
-            <Route exact path="/favourites" element={<UserFavourite />} />
-            <Route
-              path="/search"
-              element={<Search category={category} keyword={searchTerm} />}
-            />
-          </Route>
-
-          <Route path="auth" element={<Authentication />}>
-            <Route index element={<LoginBox />} />
-            <Route path="login" element={<LoginBox />} />
-            <Route path="register-user" element={<UserSignupBox />} />
-            <Route path="register-seller" element={<SellerSignupBox />} />
-          </Route>
-        </Routes>
-        <ShopByCategoryModal
-          open={isModalOpen}
-          close={() => setIsModalOpen(false)}
-          home={setHome}
-        />
-      </div>
-    </AuthProvider>
+            <Route path="auth" element={<Authentication />}>
+              <Route index element={<LoginBox />} />
+              <Route path="login" element={<LoginBox />} />
+              <Route path="register-user" element={<UserSignupBox />} />
+              <Route path="register-seller" element={<SellerSignupBox />} />
+            </Route>
+          </Routes>
+        </div>
+      </AuthProvider>
+    </ProductProvider>
   );
 };
 

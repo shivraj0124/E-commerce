@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { ProductContext } from "../Components/Context/ProductContext";
 const Search = ({ category, keyword }) => {
   const valuetext = (value) => {
     return `${value} $`;
@@ -69,6 +69,8 @@ const Search = ({ category, keyword }) => {
     showSortOption(!sortOption);
     showFiltersOption(false)
   };
+
+  const {searchTerm , searchCategory} = useContext(ProductContext);
   return (
     <div className=" p-1 bg-slate-200 flex w-screen overflow-x-hidden h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] ">
       <div className=" flex justify-between px-3 py-1 sm:hidden w-full gap-2 h-full dark:bg-slate-800">
@@ -102,28 +104,34 @@ const Search = ({ category, keyword }) => {
       >
         <span className=" flex flex-col gap-1">
           <span className=" text-xl font-bold ">Categories</span>
-          <span className=" font-semibold text-md ">Mobile Phones</span>
+          <span className=" font-semibold text-md ">{searchCategory.name}</span>
         </span>
         <div className=" flex flex-col gap-4 ">
           <div className="mt-8">
             <span className=" text-xl font-bold  ">Price Range</span>
             <span className=" flex flex-col dark:text-white ">
-              <Box sx={{ width: 250, } }>
+              <Box sx={{ width: 250 }}>
                 <Slider
                   getAriaLabel={() => "Price Range"}
                   value={value}
                   onChange={handleChange}
                   valueLabelDisplay="auto"
                   getAriaValueText={valuetext}
-                  
                 />
               </Box>
-              <div className=" flex w-full gap-2 text-white">
+              <div className=" flex w-full gap-2 ">
                 <TextField
-                  className=" text-white"
                   id="outlined-number"
                   label="Min"
                   type="number"
+                  sx={{
+                    color: "white",
+                    
+                  }}
+                  variant="outlined"
+                  style={{
+                    color: "white",
+                  }}
                   size="small"
                   onChange={handleMinInputChange}
                   value={value[0]}
@@ -147,9 +155,7 @@ const Search = ({ category, keyword }) => {
           </div>
 
           <div className=" flex flex-col ">
-            <span className=" text-xl font-bold ">
-              Customer Ratings
-            </span>
+            <span className=" text-xl font-bold ">Customer Ratings</span>
             <span className=" flex gap-2 text-center items-center">
               <input
                 type="checkbox"
@@ -218,7 +224,7 @@ const Search = ({ category, keyword }) => {
       >
         <div className=" p-5 w-screen dark:bg-slate-800">
           <span className=" sm:text-2xl text-xl font-bold">
-            Showing Results for "{keyword}"
+            Showing Results for "{searchTerm}"
           </span>
           <div className="flex gap-4 font-semibold mt-2  flex-col sm:flex-row w-screen ">
             <span className=" font-semibold sm:font-medium text-xl sm:text-base">
@@ -242,6 +248,9 @@ const Search = ({ category, keyword }) => {
               </button>
             </div>
           </div>
+        </div>
+        <div>
+
         </div>
       </div>
     </div>

@@ -22,9 +22,8 @@ const AuthProvider = ({ children }) => {
         }
       );
       setIsLogin(true);
-      console.log("Response:", response.data);
       setUserDetails(response.data.user);
-      console.log(response.data);
+      
     } catch (error) {
       console.log("Verification Error:", error);
       setIsLogin(false);

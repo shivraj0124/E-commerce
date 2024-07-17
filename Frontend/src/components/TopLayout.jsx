@@ -18,24 +18,28 @@ const TopLayout = () => {
   const handleModal = () => {
     setIsModalOpen(true);
   };
-  const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("All Category");
+ 
+  const setHome = () => {
+    return <Navigate to="/" />;
+  };
   return (
     <div>
       {!isAuth && (
         <>
           <TopNav />
           <SearchNav
-            category={category}
-            searchTerm={searchTerm}
-            setCategory={setCategory}
-            setSearchTerm={setSearchTerm}
+            
           />
           <Tooltip id="my-account-tooltip" />
           <Navbar openmodal={handleModal} />
         </>
       )}
       <Outlet />
+      <ShopByCategoryModal
+        open={isModalOpen}
+        close={() => setIsModalOpen(false)}
+        home={setHome}
+      />
     </div>
   );
 };

@@ -57,7 +57,7 @@ const DiscountBanner = ({
 
   return (
     <>
-      <div className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full p-6 max-md:hidden">
+      <div className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full  max-md:hidden">
         <div className="sm:text-7xl font-bold flex items-center text-3xl text-center mb-6 sm:mb-0">
           {discountName}
         </div>
