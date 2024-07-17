@@ -17,6 +17,7 @@ import {
   TopLayout,
 } from "./Components/index.js";
 import "react-tooltip/dist/react-tooltip.css";
+import {MainAdminContainer} from './Components/AdminDashboard/MainAdminContainer.jsx'
 import { Tooltip } from "react-tooltip";
 import {
   Offers,
@@ -68,6 +69,9 @@ const App = ({ location }) => {
               <Route path="login" element={<LoginBox />} />
               <Route path="register-user" element={<UserSignupBox />} />
               <Route path="register-seller" element={<SellerSignupBox />} />
+            </Route>
+            <Route path="/admin">
+              <Route path="/admin/dashboard" element={<MainAdminContainer />} />
             </Route>
           </Routes>
         </div>
