@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Link,  useNavigate } from "react-router-dom";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "./Context/ThemeContext";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { AuthContext } from "./Context/AuthContext.jsx";
+
 const ShopByCategoryModal = ({ open, close, home }) => {
   const [isVisible, setIsVisible] = useState(false);
   const modalRoot = document.getElementById("portal");
@@ -17,11 +19,16 @@ const ShopByCategoryModal = ({ open, close, home }) => {
       }, 300);
     }
   }, [open]);
-
-  const [isUserLogin, setIsUserLogin] = useState(false);
+  const {isLogin , setIsLogin , userDetails , setToken} = useContext(AuthContext);
+  
   const {theme , toggleTheme} = useContext(ThemeContext)
   if (!open && !isVisible) return null;
   
+  const removeAccount = () =>{
+    setIsLogin(false)
+    setToken(undefined)
+    close()
+  }
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-start">
       <div
@@ -123,14 +130,15 @@ const ShopByCategoryModal = ({ open, close, home }) => {
                 </span>
                 <Link
                   className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
-                  to={isUserLogin ? "/my-account" : "/auth"}
+                  to={isLogin ? "/my-account" : "/auth"}
                   onClick={close}
                 >
-                  {isUserLogin ? "My account" : "Login"}
+                  {isLogin ? "My account" : "Login"}
                 </Link>
                 <span
+                onClick={removeAccount}
                   className={
-                    isUserLogin
+                    isLogin
                       ? " hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
                       : " hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5 hidden"
                   }

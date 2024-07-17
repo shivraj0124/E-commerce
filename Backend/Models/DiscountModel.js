@@ -7,7 +7,7 @@ const discountSchema = new mongoose.Schema(
     discountPercentage: { type: Number, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    products: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
   },
   { timestamps: true }
 );

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   BrowserRouter,
   Routes,
   Route,
-  Link,
   Navigate,
   useLocation,
 } from "react-router-dom";
@@ -13,10 +12,11 @@ import {
   ShopByCategoryModal,
   LoginBox,
   UserSignupBox,
-} from "./Components/index";
+  SellerSignupBox,
+  TopNav,
+} from "./Components/index.js";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
-import { ThemeContext } from "./ThemeContext";
 import {
   Offers,
   Home,
@@ -26,13 +26,8 @@ import {
   UserFavourite,
   Search,
   Authentication,
-} from "./pages/index";
-
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
-import PersonIcon from "@mui/icons-material/Person";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
+} from "./pages/index.js";
+import { AuthProvider  } from "./Components/Context/AuthContext.jsx";
 // admin components
 import MainAdminContainer from "./Components/AdminDashboard/MainAdminContainer";
 const App = ({ location }) => {
@@ -42,58 +37,31 @@ const App = ({ location }) => {
   };
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All Category");
-
+  
   const setHome = () => {
-    console.log("Home");
-    <Navigate to="/" />;
+    return <Navigate to="/" />;
   };
-
-  const homePage = location.pathname === "/";
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  const [isUserLogin, setIsUserLogin] = useState(false);
+  const isAuth = location.pathname.startsWith("/auth");
+  
   return (
-    <div>
-      {homePage && (
-        <>
-          <div
-            className={`flex px-7 py-2 justify-center sm:justify-between  text-text text-sm font-normal flex-col sm:flex-row bg-slate-100 dark:bg-slate-800 dark:text-slate-100`}
-          >
-            <span className=" text-center">WELCOME TO ELECTRO STORE</span>
-            <div className="sm:flex gap-4 text-xs sm:text-base hidden">
-              <span onClick={toggleTheme} className=" cursor-pointer ">
-                {theme === "dark" ? (
-                  <LightModeIcon className=" hover:text-yellow-400" />
-                ) : (
-                  <DarkModeIcon className=" hover:text-purple-600" />
-                )}
-              </span>
-              <span className="cursor-pointer hover:text-blue-600 ">
-                <LocationOnOutlinedIcon /> Store Locator
-              </span>
-              <span className="cursor-pointer hover:text-blue-600">
-                <LocalShippingOutlinedIcon /> Free Shipping & Returns
-              </span>
-              <span className="cursor-pointer hover:text-blue-600">
-                <Link to={isUserLogin ? "/my-account" : "/auth/login"}>
-                  <PersonIcon /> {isUserLogin ? "My Account" : "Login"}
-                </Link>
-              </span>
-            </div>
-          </div>
-          <SearchNav
-            category={category}
-            searchTerm={searchTerm}
-            setCategory={setCategory}
-            setSearchTerm={setSearchTerm}
-          />
-          <Tooltip id="my-account-tooltip" />
-          <Navbar openmodal={handleModal} />
-        </>
-      )}
+    <AuthProvider>
+      <div>
+        {!isAuth && (
+          <>
+            <TopNav />
+            <SearchNav
+              category={category}
+              searchTerm={searchTerm}
+              setCategory={setCategory}
+              setSearchTerm={setSearchTerm}
+            />
+            <Tooltip id="my-account-tooltip" />
+            <Navbar openmodal={handleModal} />
+          </>
+        )}
 
-      <Routes>
-        <Route path="/" element={<Home />}>
-          <Route index element={<Home />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/buy-again" element={<BuyAgain />} />
           <Route path="/my-account" element={<AboutUser />} />
@@ -103,25 +71,23 @@ const App = ({ location }) => {
             path="/search"
             element={<Search category={category} keyword={searchTerm} />}
           />
-        </Route>
-        <Route path="/auth" element={<Authentication />}>
-          <Route index element={<LoginBox />} />
-          <Route path="login" element={<LoginBox />} />
-          <Route path="register-user" element={<UserSignupBox />} />
-        </Route>
-        <Route path="/admin">
+          <Route path="auth" element={<Authentication />}>
+            <Route index element={<LoginBox />} />
+            <Route path="login" element={<LoginBox />} />
+            <Route path="register-user" element={<UserSignupBox />} />
+            <Route path="register-seller" element={<SellerSignupBox />} />
+          </Route>
+          <Route path="/admin">
           <Route path="/admin/dashboard" element={<MainAdminContainer />} />
         </Route>
       </Routes>
-
-      {homePage && (
         <ShopByCategoryModal
           open={isModalOpen}
           close={() => setIsModalOpen(false)}
           home={setHome}
         />
-      )}
-    </div>
+      </div>
+    </AuthProvider>
   );
 };
 

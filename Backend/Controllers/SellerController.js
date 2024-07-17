@@ -125,7 +125,7 @@ const updateProduct = async (req, res) => {
     images,
     productId,
   } = req.body;
-  
+
   try {
     // Define the update object
     const updateData = {
@@ -175,8 +175,46 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const addDiscount = async (req, res) => {
+  const {
+    name,
+    description,
+    discountPercentage,
+    startDate,
+    endDate,
+    productId,
+  } = req.body;
+  try {
+    const discountOnProduct = new DiscountModel({
+      name: name,
+      description: description,
+      discountPercentage: discountPercentage,
+      startDate: startDate,
+      endDate: endDate,
+      products: productId,
+    });
+    await discountOnProduct.save();
+    let newProduct = await ProductModel.findById(productId);
+    console.log("new discountOnProduct", newProduct);
+    newProduct.discount = discountOnProduct._id;
+    await newProduct.save();
+    console.log("newProduct", newProduct);
+    res.send({
+      success: true,
+      message: "Discount Added Successfully",
+      discount: discountOnProduct,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
 module.exports = {
   addNewProduct,
   getSellerFullData,
-  updateProduct
+  updateProduct,
+  addDiscount
 };
