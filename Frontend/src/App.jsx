@@ -30,6 +30,7 @@ import {
 import { AuthProvider  } from "./Components/Context/AuthContext.jsx";
 // admin components
 import MainAdminContainer from "./Components/AdminDashboard/MainAdminContainer";
+import {AdminProvider} from "./Components/Context/AdminContext.jsx"
 const App = ({ location }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
@@ -45,8 +46,9 @@ const App = ({ location }) => {
   
   return (
     <AuthProvider>
+      <AdminProvider>
       <div>
-        {!isAuth && (
+        {/* {!isAuth && (
           <>
             <TopNav />
             <SearchNav
@@ -58,7 +60,7 @@ const App = ({ location }) => {
             <Tooltip id="my-account-tooltip" />
             <Navbar openmodal={handleModal} />
           </>
-        )}
+        )} */}
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -87,6 +89,7 @@ const App = ({ location }) => {
           home={setHome}
         />
       </div>
+      </AdminProvider>
     </AuthProvider>
   );
 };
