@@ -6,10 +6,21 @@ export default {
       fontFamily: {
         oswald: ["Oswald", "sans-serif"],
       },
+      invert: {
+        1: "1",
+      },
     },
-   
   },
-  
-  plugins: [require("daisyui")],
+
+  plugins: [
+    require("daisyui"),
+    function ({ addUtilities }) {
+      addUtilities({
+        ".invert-1": {
+          filter: "invert(1)",
+        },
+      });
+    },
+  ],
   darkMode: "class",
 };

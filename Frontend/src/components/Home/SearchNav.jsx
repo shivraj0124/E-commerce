@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { ProductContext } from "./Context/ProductContext";
+import { ProductContext } from "../Context/ProductContext";
 const SearchNav = () => {
   const navigate = useNavigate();
 const { setSearchTerm, setSearchCategory } = useContext(ProductContext);
@@ -27,7 +27,7 @@ setSearchTerm(searchedTerm)
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllCategories`
       );
       setCategories(response.data.categories);
-      console.log(response)
+      
     } catch (e) {
       console.log(e);
     }

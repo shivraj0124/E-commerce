@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -6,19 +6,11 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import {
-  SearchNav,
-  Navbar,
-  ShopByCategoryModal,
-  LoginBox,
-  UserSignupBox,
-  SellerSignupBox,
-  TopNav,
-  TopLayout,
-} from "./Components/index.js";
+import LoginBox from "./Components/Auth/LoginBox.jsx";
+import UserSignupBox from "./Components/Auth/UserSignnupBox.jsx";
+import SellerSignupBox from "./Components/Auth/SellerSignupBox.jsx";
 import "react-tooltip/dist/react-tooltip.css";
-import {MainAdminContainer} from './Components/AdminDashboard/MainAdminContainer.jsx'
-import { Tooltip } from "react-tooltip";
+import MainAdminContainer from "./Components/AdminDashboard/MainAdminContainer.jsx";
 import {
   Offers,
   Home,
@@ -29,21 +21,22 @@ import {
   Search,
   Authentication,
 } from "./pages/index.js";
+import TopLayout from './Components/Home/TopLayout.jsx'
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
-import  {ProductProvider } from "./Components/Context/ProductContext.jsx";
+import { ProductProvider } from "./Components/Context/ProductContext.jsx";
 
 const App = ({ location }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleModal = () => {
-    setIsModalOpen(true);
-  };
-  const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("All Category");
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const handleModal = () => {
+  //   setIsModalOpen(true);
+  // };
+  // const [searchTerm, setSearchTerm] = useState("");
+  // const [category, setCategory] = useState("All Category");
 
-  const setHome = () => {
-    return <Navigate to="/" />;
-  };
-  const isAuth = location.pathname.startsWith("/auth");
+  // const setHome = () => {
+  //   return <Navigate to="/" />;
+  // };
+  // const isAuth = location.pathname.startsWith("/auth");
 
   return (
     <ProductProvider>
@@ -58,10 +51,7 @@ const App = ({ location }) => {
               <Route exact path="/my-account" element={<AboutUser />} />
               <Route exact path="/cart" element={<Cart />} />
               <Route exact path="/favourites" element={<UserFavourite />} />
-              <Route
-                path="/search"
-                element={<Search category={category} keyword={searchTerm} />}
-              />
+              <Route path="/search" element={<Search />} />
             </Route>
 
             <Route path="auth" element={<Authentication />}>

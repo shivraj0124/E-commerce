@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
   );
 
   const verifyAuth = async () => {
-    console.log(token);
+    
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify`,

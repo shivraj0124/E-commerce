@@ -5,8 +5,8 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined";
 import { Link, useLocation } from "react-router-dom";
-import { ThemeContext } from "./Context/ThemeContext";
-import { AuthContext } from "./Context/AuthContext.jsx";
+import { ThemeContext } from "../Context/ThemeContext.jsx";
+import { AuthContext } from "../Context/AuthContext.jsx";
 const Navbar = ({ openmodal }) => {
   const location = useLocation();
   const { theme, toggleTheme } = useContext(ThemeContext);

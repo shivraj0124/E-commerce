@@ -3,15 +3,11 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
-import {
-  SearchNav,
-  Navbar,
-  ShopByCategoryModal,
-  LoginBox,
-  UserSignupBox,
-  SellerSignupBox,
-  TopNav,
-} from "./index.js";
+import SearchNav from "./SearchNav";
+import ShopByCategoryModal from "../ShopByCategoryModal"
+import DiscountBanner from "./DiscountBanner";
+import Navbar from "./Navbar"
+import TopNav from './TopNav'
 const TopLayout = () => {
   const isAuth = location.pathname.startsWith("/auth");
   const [isModalOpen, setIsModalOpen] = useState(false);
