@@ -24,6 +24,7 @@
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
     "react-loader-spinner": "^6.1.6",
+    "react-loading-skeleton": "^3.4.0",
     "react-router-dom": "^6.23.1",
     "react-slick": "^0.30.2",
     "react-slider": "^2.0.6",

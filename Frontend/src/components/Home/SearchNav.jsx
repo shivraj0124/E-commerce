@@ -7,13 +7,16 @@ import { Link } from "react-router-dom";
 import { ProductContext } from "../Context/ProductContext";
 const SearchNav = () => {
   const navigate = useNavigate();
-const { setSearchTerm, setSearchCategory } = useContext(ProductContext);
-const [searchedTerm, setSearchedTerm] = useState();
-const [searchedCategory, setSearchedCategory] = useState({})
+  const { setSearchTerm, setSearchCategory } = useContext(ProductContext);
+  const [searchedTerm, setSearchedTerm] = useState();
+  const [searchedCategory, setSearchedCategory] = useState({});
   const showSearch = () => {
-    setSearchCategory(searchedCategory)
-setSearchTerm(searchedTerm)
-    navigate(`/search`);
+    setSearchCategory(searchedCategory);
+    setSearchTerm(searchedTerm);
+    if(searchedTerm){
+      navigate(`/search`);
+    }
+    
   };
   const handleSearch = (e) => {
     if (e.code === "Enter" || e.keyCode === 13) {
@@ -26,17 +29,16 @@ setSearchTerm(searchedTerm)
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllCategories`
       );
-      setCategories(response.data.categories);
       
+      setCategories(response.data.categories);
     } catch (e) {
       console.log(e);
     }
   };
-  useEffect(()=>{
-    getCartegoris()
-  },[])
-  
-  
+  useEffect(() => {
+    getCartegoris();
+  }, []);
+
   return (
     <div className=" flex sm:justify-between  justify-center font-oswald px-5 sm:py-8 py-5">
       <Link
@@ -77,6 +79,7 @@ setSearchTerm(searchedTerm)
           <input
             type="text"
             id="searchbox"
+            required 
             placeholder="Search for Product..."
             className=" px-4 sm:w-80 outline-none w-40 placeholder:text-xs"
             // value={searchTerm}

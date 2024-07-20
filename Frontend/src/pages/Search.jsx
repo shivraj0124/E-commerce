@@ -1,11 +1,15 @@
-import React, { useContext, useCallback, useState } from "react";
+import React, { useContext, useCallback, useState, useEffect } from "react";
 import { ProductContext } from "../Components/Context/ProductContext";
 import SearchResult from "../Components/SearchPage/SearchResult.jsx";
 import SearchFilter from "../Components/SearchPage/SearchFilter.jsx";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import axios from "axios";
 
 const Search = () => {
   const [sortOption, showSortOption] = useState(false);
   const [filtersOption, showFiltersOption] = useState(false);
+  const [loading, setLoading] = useState(true); 
 
   const toggleSortOption = useCallback(() => {
     showSortOption(!sortOption);
@@ -19,6 +23,31 @@ const Search = () => {
 
   const { searchTerm } = useContext(ProductContext);
 
+  const [products, setProducts] = useState([]);
+
+  const getAllProducts = async (productKeyword, productCategory) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`
+      );
+      console.log(response.data);
+      if (response.data.success) {
+        setTimeout(() => {
+          setProducts(response.data.products);
+        setLoading(false); 
+        }, 5000);
+        
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false); 
+    }
+  };
+
+  useEffect(() => {
+    getAllProducts();
+  }, []);
+
   return (
     <div className="p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] overflow-x-hidden">
       <SearchFilter
@@ -29,7 +58,7 @@ const Search = () => {
       />
       <div className="dark:border-gray-600 h-full border-4 shadow-xl dark:bg-slate-800 p-4 gap-5 flex flex-col flex-grow">
         <div
-          className={`flex justify-start bg-white w-full dark:border-gray-600 h-full ${
+          className={`flex justify-start bg-white w-full dark:border-gray-600 h-full dark:bg-slate-800 ${
             sortOption ? "flex" : "hidden sm:flex"
           }`}
         >
@@ -61,8 +90,31 @@ const Search = () => {
             </div>
           </div>
         </div>
-        <div className="flex-grow">
-          <SearchResult />
+        <div className="flex-grow ">
+          {loading ? (
+            <div className="flex flex-col gap-4">
+              {[...Array(3)].map((_, index) => (
+                <SearchResult key={index} loading={true} />
+              ))}
+            </div>
+          ) : (
+            products.map((product) => (
+              <SearchResult
+                key={product.id}
+                productid={product.id}
+                productName={product.name}
+                productDesc={product.description}
+                productPrice={product.price}
+                productBrand={product.brand}
+                productStock={product.stock}
+                productRatings={product.ratings}
+                productNumReviews={product.numReviews}
+                productImage={product.images}
+                productDiscount={product.discount}
+                loading={false}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
