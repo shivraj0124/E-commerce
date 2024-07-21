@@ -2,14 +2,14 @@ import React, { useContext, useCallback, useState, useEffect } from "react";
 import { ProductContext } from "../Components/Context/ProductContext";
 import SearchResult from "../Components/SearchPage/SearchResult.jsx";
 import SearchFilter from "../Components/SearchPage/SearchFilter.jsx";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
 
 const Search = () => {
   const [sortOption, showSortOption] = useState(false);
   const [filtersOption, showFiltersOption] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const toggleSortOption = useCallback(() => {
     showSortOption(!sortOption);
@@ -30,17 +30,15 @@ const Search = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`
       );
-      console.log(response.data);
+
       if (response.data.success) {
-        setTimeout(() => {
-          setProducts(response.data.products);
-        setLoading(false); 
-        }, 5000);
-        
+        setProducts(response.data.products);
+
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -100,8 +98,8 @@ const Search = () => {
           ) : (
             products.map((product) => (
               <SearchResult
-                key={product.id}
-                productid={product.id}
+                key={product._id}
+                productid={product._id}
                 productName={product.name}
                 productDesc={product.description}
                 productPrice={product.price}

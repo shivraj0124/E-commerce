@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.19",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
@@ -32,8 +33,7 @@
     "react-spinners": "^0.14.1",
     "react-step-wizard": "^5.3.11",
     "react-tooltip": "^5.27.0",
-    "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.11"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

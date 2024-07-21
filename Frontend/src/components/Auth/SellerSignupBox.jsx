@@ -92,7 +92,7 @@ const SellerSignupBox = () => {
             />
             {errors.phone &&  (
               <span className="text-red-600 text-sm">
-                Enter 10 Digit Phone Number
+                Enter 10 Digit Phone Number 
               </span>
             )}
             <span className="border-2 flex justify-between items-center p-2">

@@ -123,7 +123,7 @@ const SearchFilter = ({isSortOption, toggleSortOption, filtersOption, toggleFilt
                 getAriaValueText={valuetext}
               />
             </Box>
-            <div className=" flex w-full gap-2 ">
+            <div className=" flex w-full gap-2 z-0">
               <TextField
                 id="outlined-number"
                 label="Min"

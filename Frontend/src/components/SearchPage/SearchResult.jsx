@@ -1,8 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { ThemeContext } from "../Context/ThemeContext";
+import toast, { LoaderIcon, Toaster } from "react-hot-toast";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { AuthContext } from "../Context/AuthContext.jsx";
+import axios from "axios";
+
 const SearchResult = ({
   productid,
   productName,
@@ -16,12 +21,74 @@ const SearchResult = ({
   productDiscount,
   loading,
 }) => {
-  const { theme } = useContext(ThemeContext);
-  const isDarkMode = theme === "dark";
+  const { userDetails, token } = useContext(AuthContext);
+
+  const [userLikes, setUserLikes] = useState([]);
+  const [loadingLike, setLoadingLike] = useState(false);
+  const calculateDiscountPrice = (originalPrice, discountPercentage) => {
+    const discount = originalPrice * (discountPercentage / 100);
+    const discountedPrice = originalPrice - discount;
+    return discountedPrice;
+  };
+
+  const getAllLikesByUser = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/getAllLikesByUser`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserLikes(response.data.likes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const likeDislikeProduct = async (productid) => {
+    setLoadingLike(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/likeDisLikeTheProduct`,
+        {
+          userId: userDetails._id,
+          productId: productid,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        if (response.data.message === "Product Disliked Successfully.") {
+          setUserLikes(userLikes.filter((id) => id !== productid));
+        } else if (response.data.message === "Product Liked Successfully.") {
+          setUserLikes([...userLikes, productid]);
+        }
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoadingLike(false);
+  };
+
+  useEffect(() => {
+    if (token) {
+      getAllLikesByUser();
+    }
+  }, [token]);
+
   return (
     <>
+      <Toaster />
       {loading ? (
-        <div className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-10 py-3 w-full">
+        <div className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-6 py-5 w-full">
           <div className="flex w-4/5 justify-between">
             <div className="relative h-52 w-1/6">
               <Skeleton className="absolute inset-0 h-full w-full object-cover rounded-md aspect-3/2" />
@@ -29,23 +96,23 @@ const SearchResult = ({
             <div className="flex flex-col justify-between p-4 items-start w-4/5 flex-none">
               <div className="flex flex-col w-full">
                 <span className="text-3xl font-bold">
-                  <Skeleton width={200} /> || <Skeleton width={100} />
+                  <Skeleton width={200} /> <Skeleton width={100} />
                 </span>
                 <span className="flex items-center gap-2">
                   <Rating
                     name="read-only"
                     sx={{
                       "& .MuiRating-icon": {
-                        color: "gold", // Golden color for both filled and empty stars
+                        color: "gold",
                       },
                       "& .MuiRating-iconEmpty": {
-                        color: "gold", // Golden color for empty stars
+                        color: "gold",
                       },
                       "& .MuiRating-iconFilled": {
-                        color: "gold", // Golden color for filled stars
+                        color: "gold",
                       },
                       "& .MuiRating-iconHover": {
-                        color: "gold", // Golden color for hover
+                        color: "gold",
                       },
                     }}
                     value={0}
@@ -63,7 +130,7 @@ const SearchResult = ({
               </div>
             </div>
           </div>
-          <div className="p-4 flex flex-col px-10">
+          <div className="p-4 flex  px-10">
             <div className="flex flex-col justify-between h-full">
               <div className="flex flex-col">
                 <span className="font-bold text-3xl font-oswald">
@@ -83,10 +150,13 @@ const SearchResult = ({
                 <Skeleton width={150} height={50} />
               </SkeletonTheme>
             </div>
+            <span className=" text-center ">
+              <FavoriteBorderIcon />
+            </span>
           </div>
         </div>
       ) : (
-        <div className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-10 py-3 w-full flex-row">
+        <div className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-6 py-5 w-full flex-row ">
           <div className="flex w-4/5 justify-between ">
             <div className="relative h-52 w-1/6">
               <img
@@ -98,7 +168,7 @@ const SearchResult = ({
             <div className="flex flex-col justify-between p-4 items-start w-4/5 flex-none">
               <div className="flex flex-col w-full">
                 <span className="text-3xl font-bold">
-                  {productName} || {productBrand}
+                  {productName} , {productBrand}
                 </span>
                 <span className="flex items-center gap-2">
                   <Rating
@@ -132,21 +202,26 @@ const SearchResult = ({
               </div>
             </div>
           </div>
-          <div className="p-4 flex flex-col px-10">
+          <div className="p-4 flex  w-1/5 justify-around">
             <div className="flex flex-col justify-between h-full">
               <div className="flex flex-col">
-                <span className="font-bold text-3xl font-oswald">
-                  ₹{productPrice}
+                <span className="font-bold text-3xl font-oswald ">
+                  {productDiscount
+                    ? `₹${calculateDiscountPrice(
+                        productPrice,
+                        productDiscount.discountPercentage
+                      )}`
+                    : `₹${productPrice}`}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 text-center">
                   <span className="font-light text-xl line-through text-center">
-                    ₹30000
+                    {productDiscount ? productPrice : ""}
                   </span>{" "}
-                  {/* {productDiscount =! undefined && (
-                    <span className="text-green-600 font-semibold">
-                      `${productDiscount}% off`
-                    </span>
-                  )} */}
+                  <span className="text-green-600 font-semibold text-center">
+                    {productDiscount
+                      ? `${productDiscount.discountPercentage}% off`
+                      : ""}
+                  </span>
                 </span>
                 {productStock <= 5 && (
                   <span className="text-red-500 font-semibold">
@@ -158,6 +233,18 @@ const SearchResult = ({
                 Add to Cart
               </button>
             </div>
+            <span
+              className=" text-center cursor-pointer "
+              onClick={() => likeDislikeProduct(productid)}
+            >
+              {loadingLike ? (
+                <LoaderIcon />
+              ) : userLikes && userLikes.includes(productid) ? (
+                <FavoriteIcon sx={{ color: "red" }} />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
+            </span>
           </div>
         </div>
       )}
