@@ -90,7 +90,7 @@ const SellerSignupBox = () => {
               })}
               className="dark:bg-[#121212] bg-white outline-none p-2 border-2"
             />
-            {errors.phone && errors.phone.type === "minLength" (
+            {errors.phone &&  (
               <span className="text-red-600 text-sm">
                 Enter 10 Digit Phone Number
               </span>

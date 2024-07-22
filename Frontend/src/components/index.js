@@ -6,3 +6,4 @@ export { default as LoginBox } from "./LoginBox.jsx";
 export { default as UserSignupBox } from "./UserSignnupBox.jsx";
 export { default as SellerSignupBox } from "./SellerSignupBox.jsx";
 export { default as TopNav } from "./TopNav.jsx";
+export { default as TopLayout } from "./TopLayout.jsx";

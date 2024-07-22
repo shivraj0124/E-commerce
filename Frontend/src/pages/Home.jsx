@@ -40,7 +40,7 @@ const Home = () => {
   return (
     <>
       <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden ">
-        <Slider {...sliderSetting} className="">
+        <Slider {...sliderSetting} className="" swipe = {true}>
           <DiscountBanner
           
             discountName={Discount1.name}

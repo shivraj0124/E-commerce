@@ -13,7 +13,7 @@ const TopNav = () => {
   
   const {userDetails , isLogin } = useContext(AuthContext)
   const userName = userDetails?.name
-  console.log(userDetails)
+  // console.log(userDetails)
   
   return (
     <div>

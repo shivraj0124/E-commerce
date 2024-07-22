@@ -1,33 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
-  const [tempCategory, setTempCategory] = useState(category);
-  const [tempSearchTerm, setTempSearchTerm] = useState(searchTerm);
+import { ProductContext } from "./Context/ProductContext";
+const SearchNav = () => {
   const navigate = useNavigate();
-
+const { setSearchTerm, setSearchCategory } = useContext(ProductContext);
+const [searchedTerm, setSearchedTerm] = useState();
+const [searchedCategory, setSearchedCategory] = useState({})
   const showSearch = () => {
-    if (tempSearchTerm.trim()) {
-      const queryParams = new URLSearchParams({
-        category,
-        searchTerm,
-      }).toString();
-      setCategory(tempCategory);
-      setSearchTerm(tempSearchTerm);
-      // console.log("temp" + tempSearchTerm);
-      // console.log("final" + searchTerm);
-      navigate(`/search?${queryParams}`);
-      // sendSearch();
-    }
+    setSearchCategory(searchedCategory)
+setSearchTerm(searchedTerm)
+    navigate(`/search`);
   };
   const handleSearch = (e) => {
     if (e.code === "Enter" || e.keyCode === 13) {
       showSearch();
     }
   };
+  const [categories, setCategories] = useState([]);
+  const getCartegoris = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllCategories`
+      );
+      setCategories(response.data.categories);
+      console.log(response)
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(()=>{
+    getCartegoris()
+  },[])
+  
+  
   return (
     <div className=" flex sm:justify-between  justify-center font-oswald px-5 sm:py-8 py-5">
       <Link
@@ -43,14 +52,27 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
             id=""
             className=" p-2 border-r border-gray-300 font-bold outline-none sm:flex px-3 w-20 sm:w-1/2 text-xs sm:text-base"
             // value={category}
-            onChange={(e) => setTempCategory(e.target.value)}
+            onChange={(e) => {
+              const selectedCategory = categories.find(
+                (cat) => cat._id === e.target.value
+              );
+              if (selectedCategory) {
+                setSearchedCategory({
+                  name: selectedCategory.name,
+                  id: e.target.value,
+                });
+                console.log(selectedCategory.name);
+              }
+            }}
           >
-            <option>All Category</option>
-            <option>Laptops</option>
-            <option>Mobile Phones</option>
-            <option>Headphones</option>
-            <option>Camera & Gears</option>
-            <option>Powerbanks & Chargers</option>
+            {categories &&
+              categories?.map((category, index) => {
+                return (
+                  <option key={index} value={category._id} name={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
           </select>
           <input
             type="text"
@@ -58,7 +80,7 @@ const SearchNav = ({ category, setCategory, searchTerm, setSearchTerm }) => {
             placeholder="Search for Product..."
             className=" px-4 sm:w-80 outline-none w-40 placeholder:text-xs"
             // value={searchTerm}
-            onChange={(e) => setTempSearchTerm(e.target.value)}
+            onChange={(e) => setSearchedTerm(e.target.value)}
             onKeyDown={(e) => handleSearch(e)}
           />
           <button
