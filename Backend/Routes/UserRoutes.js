@@ -8,7 +8,6 @@ const {
   addToCart,
   editAddress,
   updatePersonalInfo,
-  
 } = require("../Controllers/UserControllers");
 const { protect } = require("../Middleware/authMiddleware");
 
@@ -21,6 +20,5 @@ router.post("/addReview", protect, addReview);
 router.post("/likeDisLikeTheProduct", protect, likeDisLikeTheProduct);
 router.post("/editAddress", protect, editAddress);
 router.post("/updatePersonalInfo", protect, updatePersonalInfo);
-
 
 module.exports = router;
