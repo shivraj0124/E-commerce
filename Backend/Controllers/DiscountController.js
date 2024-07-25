@@ -82,6 +82,8 @@ const getAllDiscountsBetweenDateRange = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   getAllDiscounts,
   getAllDiscountsByProduct,
