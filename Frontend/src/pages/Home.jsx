@@ -47,7 +47,7 @@ const Home = () => {
   useEffect(() => {
     getDiscountedProducts();
   }, []);
-
+  console.log(discountedProducts);
   const Discount1 = {
     name: "Buy One Get One",
     image:
@@ -81,7 +81,6 @@ const Home = () => {
           <Slider {...sliderSetting} className="" swipe={true}>
             {discountedProducts.map((productArray, index) => {
               const product = productArray[0];
-              console.log(product)
               return (
                 <DiscountBanner
                   key={product._id}
