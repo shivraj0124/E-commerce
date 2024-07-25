@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 const ProductModel = require("../Models/ProductModel");
 const CategoryModel = require("../Models/CategoryModel");
-
+const UserModel = require("../Models/UserModel");
+const LikeModel = require("../Models/LikeModel");
 const getAllProducts = async (req, res) => {
   try {
+    const { userId } = req.body;
     const products = await ProductModel.find()
       .populate({
         path: "reviews",
@@ -11,12 +13,35 @@ const getAllProducts = async (req, res) => {
           path: "user",
         },
       })
-      .populate("discount");
+      .populate("discount")
+
+    let dataOfP =[];
     if (products && products.length > 0) {
+      if (userId) {
+        // Check if the user has liked each product
+        console.log("Hello");
+        for (let i = 0; i < products.length; i++) {
+          let hasLiked = false
+          const checkIfLike = await LikeModel.find({
+            user: userId,
+            product: products[i]._id,
+          });
+          if (checkIfLike.length > 0) {
+            hasLiked = true
+            
+          }
+          let result = {
+            ...products[i]._doc, // Spread operator to include all product details
+            hasLiked,
+          };
+          dataOfP.push(result)
+        }
+      }
+
       res.send({
         success: true,
         message: "Products fetched",
-        products,
+        dataOfP,
       });
     } else {
       res.send({
@@ -145,29 +170,29 @@ const getAllReviewsByProduct = async (req, res) => {
 };
 
 const getAllLikesByProduct = async (req, res) => {
-    try {
-      const productId = req.params.id;
-      const likes = await LikeModel.find({ product: productId }).populate(
-        "product"
-      );
-      if (likes && likes.length > 0) {
-        res.send({
-          success: true,
-          message: "Likes fetched",
-          likes,
-        });
-      } else {
-        res.send({
-          success: false,
-          message: "Likes Not Found ",
-        });
-      }
-    } catch (err) {
+  try {
+    const productId = req.params.id;
+    const likes = await LikeModel.find({ product: productId }).populate(
+      "product"
+    );
+    if (likes && likes.length > 0) {
+      res.send({
+        success: true,
+        message: "Likes fetched",
+        likes,
+      });
+    } else {
       res.send({
         success: false,
-        message: err.message,
+        message: "Likes Not Found ",
       });
     }
+  } catch (err) {
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 module.exports = {

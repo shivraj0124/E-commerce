@@ -307,12 +307,104 @@ const updatePersonalInfo = async (req, res) => {
   }
 };
 
+const getCartInfo = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is available in req.user
+    const user = await UserModel.findById(userId).populate('cart.product').exec();
+    
+    if (!user) {
+      return res.send({ message: 'User not found' });
+    }
+    return res.send({
+      success: true,
+      message: "Product fetched to cart",
+      user,
+    });
+
+  } catch (err) {
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const geSingleUser = async(req,res)=>{
+  try{
+    const userId = req.user.id; // Assuming user ID is available in req.user
+    const user = await UserModel.findById(userId);
+    
+    if (!user) {
+      return res.send({ message: 'User not found' });
+    }
+    return res.send({
+      success: true,
+      message: "User Info fetched",
+      user,
+    });
+  }catch(err){
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+}
+
+const removeFromCart = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const userId = req.user._id;
+
+    // Find the user by their ID
+    const user = await UserModel.findById(userId);
+
+    if (user) {
+      // Check if the product is in the cart
+      const productIndex = user.cart.findIndex(
+        (cartItem) => cartItem.product.toString() === productId
+      );
+
+      if (productIndex > -1) {
+        // Remove the product from the cart
+        user.cart.splice(productIndex, 1);
+        await user.save();
+
+        return res.send({
+          success: true,
+          message: "Product removed from cart",
+          user,
+        });
+      } else {
+        return res.send({
+          success: false,
+          message: "Product not found in cart",
+        });
+      }
+    } else {
+      return res.send({
+        success: false,
+        message: "User not found",
+      });
+    }
+  } catch (err) {
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   getAllLikesByUser,
   getAllReviewsByUser,
   addToCart,
+  removeFromCart,
   addReview,
   likeDisLikeTheProduct,
   editAddress,
-  updatePersonalInfo
+  updatePersonalInfo,
+  getCartInfo,
+  geSingleUser
 };

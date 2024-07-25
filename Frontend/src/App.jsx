@@ -23,7 +23,7 @@ import {
 } from "./pages/index.js";
 import TopLayout from './Components/Home/TopLayout.jsx'
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
-import { ProductProvider } from "./Components/Context/ProductContext.jsx";
+import  {ProductProvider } from "./Components/Context/ProductContext.jsx";
 
 const App = ({ location }) => {
   // const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,10 +41,11 @@ const App = ({ location }) => {
   return (
     <ProductProvider>
       <AuthProvider>
-        <div>
-          <Routes>
-            <Route path="/" element={<TopLayout />}>
-              <Route exact path="/" element={<Home />} />
+        <AdminProvider>
+          <div>
+            <Routes>
+              <Route path="/" element={<TopLayout />}>
+                <Route exact path="/" element={<Home />} />
 
               <Route exact path="/offers" element={<Offers />} />
               <Route exact path="/buy-again" element={<BuyAgain />} />
@@ -54,17 +55,21 @@ const App = ({ location }) => {
               <Route path="/search" element={<Search />} />
             </Route>
 
-            <Route path="auth" element={<Authentication />}>
-              <Route index element={<LoginBox />} />
-              <Route path="login" element={<LoginBox />} />
-              <Route path="register-user" element={<UserSignupBox />} />
-              <Route path="register-seller" element={<SellerSignupBox />} />
-            </Route>
-            <Route path="/admin">
-              <Route path="/admin/dashboard" element={<MainAdminContainer />} />
-            </Route>
-          </Routes>
-        </div>
+              <Route path="auth" element={<Authentication />}>
+                <Route index element={<LoginBox />} />
+                <Route path="login" element={<LoginBox />} />
+                <Route path="register-user" element={<UserSignupBox />} />
+                <Route path="register-seller" element={<SellerSignupBox />} />
+              </Route>
+              <Route path="/admin">
+                <Route
+                  exact path="/admin/dashboard"
+                  element={<MainAdminContainer />}
+                />
+              </Route>
+            </Routes>
+          </div>
+        </AdminProvider>
       </AuthProvider>
     </ProductProvider>
   );
