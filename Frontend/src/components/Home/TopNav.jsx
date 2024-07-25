@@ -4,9 +4,9 @@ import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined
 import PersonIcon from "@mui/icons-material/Person";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
-import { ThemeContext } from "./Context/ThemeContext.jsx";
+import { ThemeContext } from "../Context/ThemeContext.jsx";
 import { Link } from "react-router-dom";
-import { AuthContext } from "./Context/AuthContext.jsx";
+import { AuthContext } from "../Context/AuthContext.jsx";
 
 const TopNav = () => {
   const  {theme, toggleTheme}= useContext(ThemeContext);

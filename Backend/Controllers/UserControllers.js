@@ -307,6 +307,52 @@ const updatePersonalInfo = async (req, res) => {
   }
 };
 
+const getCartInfo = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is available in req.user
+    const user = await UserModel.findById(userId).populate('cart.product').exec();
+    
+    if (!user) {
+      return res.send({ message: 'User not found' });
+    }
+    return res.send({
+      success: true,
+      message: "Product fetched to cart",
+      user,
+    });
+
+  } catch (err) {
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const geSingleUser = async(req,res)=>{
+  try{
+    const userId = req.user.id; // Assuming user ID is available in req.user
+    const user = await UserModel.findById(userId);
+    
+    if (!user) {
+      return res.send({ message: 'User not found' });
+    }
+    return res.send({
+      success: true,
+      message: "User Info fetched",
+      user,
+    });
+  }catch(err){
+    return res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+}
+
+
+
+
 module.exports = {
   getAllLikesByUser,
   getAllReviewsByUser,
@@ -314,5 +360,7 @@ module.exports = {
   addReview,
   likeDisLikeTheProduct,
   editAddress,
-  updatePersonalInfo
+  updatePersonalInfo,
+  getCartInfo,
+  geSingleUser
 };

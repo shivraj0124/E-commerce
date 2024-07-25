@@ -8,12 +8,15 @@ const {
   addToCart,
   editAddress,
   updatePersonalInfo,
-  
+  getCartInfo,
+  geSingleUser
 } = require("../Controllers/UserControllers");
 const { protect } = require("../Middleware/authMiddleware");
 
 router.get("/getAllLikesByUser", protect, getAllLikesByUser);
 router.get("/getAllReviewsByUser", protect, getAllReviewsByUser);
+router.get("/getCartInfo", protect, getCartInfo);
+router.get("/geSingleUser", protect, geSingleUser);
 
 router.post("/addToCart", protect, addToCart);
 

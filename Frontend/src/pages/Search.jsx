@@ -1,256 +1,118 @@
-import React, { useContext } from "react";
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
-import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useContext, useCallback, useState, useEffect } from "react";
 import { ProductContext } from "../Components/Context/ProductContext";
-const Search = ({ category, keyword }) => {
-  const valuetext = (value) => {
-    return `${value} $`;
-  };
-  const [value, setValue] = React.useState([0, 100]);
+import SearchResult from "../Components/SearchPage/SearchResult.jsx";
+import SearchFilter from "../Components/SearchPage/SearchFilter.jsx";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import axios from "axios";
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const handleMinInputChange = (event) => {
-    const newValue = [Number(event.target.value), value[1]];
-    setValue(newValue);
-  };
-
-  const handleMaxInputChange = (event) => {
-    const newValue = [value[0], Number(event.target.value)];
-    setValue(newValue);
-  };
-  const [is4StarAbove, setIs4StarAbove] = useState(false);
-  const [is3StarAbove, setIs3StarAbove] = useState(false);
-
-  const handle3StarBox = () => {
-    setIs3StarAbove(!is3StarAbove);
-  };
-  const handle4StarBox = () => {
-    setIs4StarAbove(!is4StarAbove);
-  };
-
-  const [brandName, setBrandName] = useState("");
-  const [brandList, setBrandList] = useState([]);
-  const handleBrandName = (e) => {
-    setBrandName(e.target.value);
-  };
-
-  const brandNames = [
-    "Apple",
-    "Samsung",
-    "Xiomi",
-    "Nokia",
-    "Poco",
-    "IQOO",
-    "Realme",
-    "Mi",
-  ];
-  const updateBrandsList = (e) => {
-    const { value, checked } = e.target;
-
-    setBrandList((prevList) =>
-      checked
-        ? [...prevList, value]
-        : prevList.filter((brand) => brand !== value)
-    );
-  };
-  const [filtersOption, showFiltersOption] = useState(false);
+const Search = () => {
   const [sortOption, showSortOption] = useState(false);
+  const [filtersOption, showFiltersOption] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const toggleFiterOption = () => {
-    showFiltersOption(!filtersOption);
-    showSortOption(false)
-  };
-  const toggleSortOption = () => {
+  const toggleSortOption = useCallback(() => {
     showSortOption(!sortOption);
-    showFiltersOption(false)
+    showFiltersOption(false);
+  }, [sortOption]);
+
+  const toggleFilterOption = useCallback(() => {
+    showFiltersOption(!filtersOption);
+    showSortOption(false);
+  }, [filtersOption]);
+
+  const { searchTerm } = useContext(ProductContext);
+
+  const [products, setProducts] = useState([]);
+
+  const getAllProducts = async (productKeyword, productCategory) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`
+      );
+
+      if (response.data.success) {
+        setProducts(response.data.products);
+
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
-  const {searchTerm , searchCategory} = useContext(ProductContext);
+  useEffect(() => {
+    getAllProducts();
+  }, []);
+
   return (
-    <div className=" p-1 bg-slate-200 flex w-screen overflow-x-hidden h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] ">
-      <div className=" flex justify-between px-3 py-1 sm:hidden w-full gap-2 h-full dark:bg-slate-800">
-        <button
-          className={
-            filtersOption === false
-              ? " bg-white w-1/2 h-10 rounded-md  "
-              : " bg-blue-600 w-1/2 h-10 rounded-md   text-white"
-          }
-          onClick={toggleFiterOption}
+    <div className="p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] overflow-x-hidden">
+      <SearchFilter
+        isSortOption={sortOption}
+        toggleSortOption={toggleSortOption}
+        filtersOption={filtersOption}
+        toggleFilterOption={toggleFilterOption}
+      />
+      <div className="dark:border-gray-600 h-full border-4 shadow-xl dark:bg-slate-800 p-4 gap-5 flex flex-col flex-grow">
+        <div
+          className={`flex justify-start bg-white w-full dark:border-gray-600 h-full dark:bg-slate-800 ${
+            sortOption ? "flex" : "hidden sm:flex"
+          }`}
         >
-          Filters
-        </button>
-        <button
-          className={
-            sortOption === false
-              ? " bg-white w-1/2 h-10 rounded-md  "
-              : " bg-blue-600 w-1/2 h-10 rounded-md   text-white"
-          }
-          onClick={toggleSortOption}
-        >
-          Sort
-        </button>
-      </div>
-      <div
-        className={
-          filtersOption
-            ? " sm:w-80 pl-6  py-6  border-4 dark:border-gray-700 shadow-xl bg-white pr-6 dark:bg-slate-800"
-            : " sm:w-80 pl-6  py-6  border-4 dark:border-gray-700  shadow-xl bg-white pr-6 hidden sm:flex flex-col dark:bg-slate-800"
-        }
-      >
-        <span className=" flex flex-col gap-1">
-          <span className=" text-xl font-bold ">Categories</span>
-          <span className=" font-semibold text-md ">{searchCategory.name}</span>
-        </span>
-        <div className=" flex flex-col gap-4 ">
-          <div className="mt-8">
-            <span className=" text-xl font-bold  ">Price Range</span>
-            <span className=" flex flex-col dark:text-white ">
-              <Box sx={{ width: 250 }}>
-                <Slider
-                  getAriaLabel={() => "Price Range"}
-                  value={value}
-                  onChange={handleChange}
-                  valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
-                />
-              </Box>
-              <div className=" flex w-full gap-2 ">
-                <TextField
-                  id="outlined-number"
-                  label="Min"
-                  type="number"
-                  sx={{
-                    color: "white",
-                    
-                  }}
-                  variant="outlined"
-                  style={{
-                    color: "white",
-                  }}
-                  size="small"
-                  onChange={handleMinInputChange}
-                  value={value[0]}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <TextField
-                  id="outlined-number"
-                  label="Max"
-                  type="number"
-                  size="small"
-                  onChange={handleMaxInputChange}
-                  value={value[1]}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </div>
+          <div className="w-full dark:bg-slate-800 px-3 py-1 rounded-md">
+            <span className="sm:text-2xl text-xl font-bold">
+              Showing Results for "{searchTerm}"
             </span>
-          </div>
-
-          <div className=" flex flex-col ">
-            <span className=" text-xl font-bold ">Customer Ratings</span>
-            <span className=" flex gap-2 text-center items-center">
-              <input
-                type="checkbox"
-                name=""
-                id=""
-                value={is4StarAbove}
-                onChange={handle4StarBox}
-              />
-              4 Stars & Above
-            </span>
-            <span className=" flex gap-2 text-center items-center">
-              <input
-                type="checkbox"
-                name=""
-                id=""
-                value={is3StarAbove}
-                onChange={handle3StarBox}
-              />
-              3 Stars & Above
-            </span>
-          </div>
-          <div>
-            {" "}
-            <span className=" text-xl font-bold "></span>
-          </div>
-          <div>
-            <span className=" text-xl font-bold ">Brands</span>
-            <div>
-              <div>
-                <input
-                  type="search"
-                  name=""
-                  id=""
-                  value={brandName}
-                  onChange={handleBrandName}
-                  placeholder="Search Brand"
-                  className=" outline-none border-b border-black dark:border-white bg-transparent font-bold mt-1"
-                />
-                <button className=" text-slate-500 hover:text-blue-600 ">
-                  <SearchIcon />
+            <div className="flex gap-4 font-semibold mt-2 flex-col sm:flex-row w-full">
+              <span className="font-semibold sm:font-medium text-xl sm:text-base">
+                Sort By
+              </span>
+              <div className="sm:flex flex-col sm:flex-row gap-4 flex justify-center sm:m-0 -ml-10 items-center">
+                <button className="hover:text-blue-600 sm:active:border-b-2 border-blue-600">
+                  Relevance
                 </button>
-                <div className=" flex flex-col mt-2">
-                  {brandNames.map((name, index) => (
-                    <span className=" flex gap-2">
-                      <input
-                        type="checkbox"
-                        key={index}
-                        value={name}
-                        onChange={(e) => updateBrandsList(e)}
-                      />
-                      <span>{name}</span>
-                    </span>
-                  ))}
-                </div>
+                <button className="sm:active:border-b-2 border-blue-600 hover:text-blue-600">
+                  Popularity
+                </button>
+                <button className="sm:active:border-b-2 border-blue-600 hover:text-blue-600">
+                  Price- Low to High
+                </button>
+                <button className="sm:active:border-b-2 border-blue-600 hover:text-blue-600">
+                  Price- High to Low
+                </button>
+                <button className="sm:active:border-b-2 border-blue-600 hover:text-blue-600">
+                  Newest First
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className={
-          sortOption
-            ? " flex justify-start bg-white w-full shadow-xl border-4 dark:border-gray-600"
-            : " sm:flex justify-start bg-white w-full shadow-xl border-4 hidden dark:border-gray-600"
-        }
-      >
-        <div className=" p-5 w-screen dark:bg-slate-800">
-          <span className=" sm:text-2xl text-xl font-bold">
-            Showing Results for "{searchTerm}"
-          </span>
-          <div className="flex gap-4 font-semibold mt-2  flex-col sm:flex-row w-screen ">
-            <span className=" font-semibold sm:font-medium text-xl sm:text-base">
-              Sort By
-            </span>
-            <div className=" sm:flex flex-col sm:flex-row gap-4    flex justify-center sm:m-0 -ml-10 items-center">
-              <button className=" hover:text-blue-600 sm:active:border-b-2 border-blue-600">
-                Relevence
-              </button>
-              <button className=" sm:active:border-b-2 border-blue-600 hover:text-blue-600 ">
-                Popularity
-              </button>
-              <button className=" sm:active:border-b-2 border-blue-600 hover:text-blue-600 ">
-                Price- Low to High
-              </button>
-              <button className=" sm:active:border-b-2 border-blue-600 hover:text-blue-600 ">
-                Price- High to Low
-              </button>
-              <button className=" sm:active:border-b-2 border-blue-600 hover:text-blue-600 ">
-                Newest First
-              </button>
+        <div className="flex-grow ">
+          {loading ? (
+            <div className="flex flex-col gap-4">
+              {[...Array(3)].map((_, index) => (
+                <SearchResult key={index} loading={true} />
+              ))}
             </div>
-          </div>
-        </div>
-        <div>
-
+          ) : (
+            products.map((product) => (
+              <SearchResult
+                key={product._id}
+                productid={product._id}
+                productName={product.name}
+                productDesc={product.description}
+                productPrice={product.price}
+                productBrand={product.brand}
+                productStock={product.stock}
+                productRatings={product.ratings}
+                productNumReviews={product.numReviews}
+                productImage={product.images}
+                productDiscount={product.discount}
+                loading={false}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

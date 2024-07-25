@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { DiscountBanner } from "../Components";
+import  DiscountBanner  from "../Components/Home/DiscountBanner.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";

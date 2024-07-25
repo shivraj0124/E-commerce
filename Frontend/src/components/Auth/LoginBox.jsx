@@ -7,7 +7,7 @@ import { ClipLoader } from "react-spinners";
 import axios from "axios";
 import cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
-import { AuthContext } from "./Context/AuthContext";
+import { AuthContext } from "../Context/AuthContext";
 const LoginBox = () => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSeen = () => {
