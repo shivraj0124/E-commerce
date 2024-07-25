@@ -11,7 +11,6 @@ const AuthProvider = ({ children }) => {
   );
 
   const verifyAuth = async () => {
-    
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify`,
@@ -23,8 +22,6 @@ const AuthProvider = ({ children }) => {
       );
       setIsLogin(true);
       setUserDetails(response.data.user);
-      
-      
     } catch (error) {
       console.log("Verification Error:", error);
       setIsLogin(false);

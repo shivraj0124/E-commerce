@@ -113,6 +113,7 @@ const Search = () => {
               />
             ))
           )}
+          {/* <SearchResult /> */}
         </div>
       </div>
     </div>
