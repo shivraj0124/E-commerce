@@ -13,31 +13,32 @@ const getAllProducts = async (req, res) => {
           path: "user",
         },
       })
-      .populate("discount")
+      .populate("discount");
 
-    let dataOfP =[];
+    let dataOfP = [];
     if (products && products.length > 0) {
       if (userId) {
         // Check if the user has liked each product
         console.log("Hello");
         for (let i = 0; i < products.length; i++) {
-          let hasLiked = false
+          let hasLiked = false;
           const checkIfLike = await LikeModel.find({
             user: userId,
             product: products[i]._id,
           });
           if (checkIfLike.length > 0) {
-            hasLiked = true
-            
+            hasLiked = true;
           }
           let result = {
             ...products[i]._doc, // Spread operator to include all product details
             hasLiked,
           };
-          dataOfP.push(result)
+          dataOfP.push(result);
         }
       }
-
+      if (dataOfP.length === 0 && products.length !== 0) {
+        dataOfP = products;
+      }
       res.send({
         success: true,
         message: "Products fetched",

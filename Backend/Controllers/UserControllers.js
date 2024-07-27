@@ -11,17 +11,46 @@ const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
     const likes = await LikeModel.find({ user: userId }).populate("product");
-    if (likes && likes.length > 0) {
-      res.send({
-        success: true,
-        message: "Likes fetched",
-        likes,
-      });
-    } else {
-      res.send({
-        success: false,
-        message: "Likes Not Found ",
-      });
+    const getUser = await UserModel.findById(userId);
+
+    let userCart = getUser.cart;
+    console.log(userCart);
+    let allLikes = [];
+    if (userCart && likes && likes.length > 0 && userCart.length > 0) {
+      for (let i = 0; i < likes.length; i++) {
+        for (let j = 0; j < userCart.length; j++) {
+          const objectIdString = likes[i]?.product?._id?.toString();
+          const objectIdString2 = userCart[j]?.product?.toString();
+          if (objectIdString === objectIdString2) {
+            let result = {
+              ...likes[i]._doc,
+              hasLiked: true,
+              hasAddedToCart: true,
+            };
+            allLikes.push(result);
+          } else {
+            let result = {
+              ...likes[i]._doc,
+              hasLiked: true,
+              hasAddedToCart: false,
+            };
+            allLikes.push(result);
+          }
+        }
+      }
+      // console.log(likes)
+      if (allLikes && allLikes.length > 0) {
+        res.send({
+          success: true,
+          message: "Likes fetched",
+          allLikes,
+        });
+      } else {
+        res.send({
+          success: false,
+          message: "Likes Not Found ",
+        });
+      }
     }
   } catch (err) {
     res.send({
@@ -310,17 +339,44 @@ const updatePersonalInfo = async (req, res) => {
 const getCartInfo = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming user ID is available in req.user
-    const user = await UserModel.findById(userId).populate('cart.product').exec();
-    
+    let user = await UserModel.findById(userId).populate("cart.product").exec();
+    // console.log(user);
+
     if (!user) {
-      return res.send({ message: 'User not found' });
+      return res.send({ message: "User not found" });
     }
+    const arrayOfProductsInCart = user.cart;
+    const arrayOfUserLikes = user.likes;
+
+    // console.log('arrayOfUserLikes',arrayOfUserLikes)
+    let dataOfP = [];
+    for (let i = 0; i < arrayOfProductsInCart.length; i++) {
+      let hasLiked = false;
+      const checkIfLike = await LikeModel.find({
+        user: userId,
+        product: arrayOfProductsInCart[i]?.product?._id,
+      });
+
+      if (checkIfLike.length > 0) {
+        hasLiked = true;
+      }
+      let result = {
+        ...arrayOfProductsInCart[i]._doc, // Spread operator to include all product details
+        hasLiked,
+        hasAddedToCart: true,
+      };
+      dataOfP.push(result);
+    }
+    let finalData = {
+      ...user._doc,
+      cart: dataOfP,
+    };
+    console.log(finalData);
     return res.send({
       success: true,
       message: "Product fetched to cart",
-      user,
+      finalData,
     });
-
   } catch (err) {
     return res.send({
       success: false,
@@ -329,26 +385,26 @@ const getCartInfo = async (req, res) => {
   }
 };
 
-const geSingleUser = async(req,res)=>{
-  try{
+const geSingleUser = async (req, res) => {
+  try {
     const userId = req.user.id; // Assuming user ID is available in req.user
     const user = await UserModel.findById(userId);
-    
+
     if (!user) {
-      return res.send({ message: 'User not found' });
+      return res.send({ message: "User not found" });
     }
     return res.send({
       success: true,
       message: "User Info fetched",
       user,
     });
-  }catch(err){
+  } catch (err) {
     return res.send({
       success: false,
       message: err.message,
     });
   }
-}
+};
 
 const removeFromCart = async (req, res) => {
   try {
@@ -394,8 +450,6 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   getAllLikesByUser,
   getAllReviewsByUser,
@@ -406,5 +460,5 @@ module.exports = {
   editAddress,
   updatePersonalInfo,
   getCartInfo,
-  geSingleUser
+  geSingleUser,
 };
