@@ -5,6 +5,7 @@ const DiscountBanner = ({
   productImage,
   discountDate,
   productPrice,
+  MRP,
   productDesc,
 }) => {
   const calculateTimeLeft = () => {
@@ -83,14 +84,20 @@ const DiscountBanner = ({
               <span className="font-bold sm:text-2xl text-center text-slate-600 text-xl">
                 {productDesc}
               </span>
-              <span className="font-bold sm:text-5xl text-center text-3xl">
-                ${productPrice}
+              <span className="  ">
+                <span className="font-bold sm:text-5xl text-center text-3xl text-black">
+                  ₹{productPrice}
+                </span>
+
+                <span className=" line-through font-semibold ml-6 text-3xl text-gray-800 dark:text-gray-700">
+                  ₹{MRP}
+                </span>
               </span>
             </div>
           </div>
         </div>
       </div>
-      
+
       <div className="px-3 pt-2 w-full md:hidden flex justify-between bg-slate-100  overflow-hidden   cursor-pointer ">
         <div className="flex flex-col w-[50%] ">
           <div className="text-xl font-bold flex text-black">
@@ -113,8 +120,13 @@ const DiscountBanner = ({
               <span className=" font-bold text-xl text-center text-slate-600">
                 {productDesc}
               </span>
-              <span className="  font-bold text-xl text-left text-black">
-                ${productPrice}
+              <span>
+                <span className="  font-bold text-2xl text-left text-black">
+                  ₹{productPrice}
+                </span>
+                <span className=" line-through ml-4 text-xl font-semibold text-gray-800 dark:text-gray-700">
+                  ₹{MRP}
+                </span>
               </span>
             </div>
           </div>

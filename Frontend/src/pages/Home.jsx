@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import  DiscountBanner  from "../Components/Home/DiscountBanner.jsx";
+import React, { useContext, useEffect, useState } from "react";
+import DiscountBanner from "../Components/Home/DiscountBanner.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -9,8 +9,45 @@ import TvIcon from "@mui/icons-material/Tv";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import PowerIcon from "@mui/icons-material/Power";
 import { AuthContext } from "../Components/Context/AuthContext.jsx";
+import axios from "axios";
 
 const Home = () => {
+  const [discountedProducts, setDiscountedProducts] = useState([]);
+  const getAllDiscounts = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/discount/getAllDiscounts`
+      );
+      return response.data.discounts;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const getDiscountedProducts = async () => {
+    try {
+      const discounts = await getAllDiscounts();
+
+      // console.log("discounts are ", discounts);
+      const productRequests = discounts.map((discount) =>
+        axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/v1/product/getSingleProduct/${discount.products._id}`
+        )
+      );
+      const productResponse = await Promise.all(productRequests);
+      // console.log("products response is ", productResponse);
+      const products = productResponse.map((response) => response.data.product);
+      setDiscountedProducts(products);
+    } catch (error) {
+      console.log("Error Got while Fetching Discounts", error);
+    }
+  };
+  useEffect(() => {
+    getDiscountedProducts();
+  }, []);
+  console.log(discountedProducts);
   const Discount1 = {
     name: "Buy One Get One",
     image:
@@ -24,7 +61,6 @@ const Home = () => {
     image:
       "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MT233?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1693248327138",
     date: "2024-07-30",
-    date: "2024-07-30",
     price: 19.5,
     desc: "Iphone 13 pro max",
   };
@@ -33,55 +69,57 @@ const Home = () => {
     infinite: true,
     speed: 500,
     arrows: true,
+
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-  
+
   return (
     <>
       <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden ">
-        <Slider {...sliderSetting} className="" swipe = {true}>
-          <DiscountBanner
-          
-            discountName={Discount1.name}
-            discountDate={Discount1.date}
-            productImage={Discount1.image}
-            productPrice={Discount1.price}
-            productDesc={Discount1.desc}
-          />
-          <DiscountBanner
-            discountName={Discount2.name}
-            discountDate={Discount2.date}
-            productImage={Discount2.image}
-            productPrice={Discount2.price}
-            productDesc={Discount2.desc}
-          />
-        </Slider>
+        {discountedProducts && (
+          <Slider {...sliderSetting} className="" swipe={true}>
+            {discountedProducts.map((productArray, index) => {
+              const product = productArray[0];
+              return (
+                <DiscountBanner
+                  key={product._id}
+                  discountName={product.name}
+                  productImage={product.images[0]}
+                  discountDate={product.discount.name}
+                  productPrice={product.price}
+                  MRP={product.price}
+                />
+              );
+            })}
+          </Slider>
+        )}
       </div>
-      
+
       <div className=" bg-slate-100 flex flex-col md:hidden ">
-        <Slider {...sliderSetting} className="">
-          <DiscountBanner
-          
-            discountName={Discount1.name}
-            discountDate={Discount1.date}
-            productImage={Discount1.image}
-            productPrice={Discount1.price}
-            productDesc={Discount1.desc}
-          />
-          <DiscountBanner
-            discountName={Discount2.name}
-            discountDate={Discount2.date}
-            productImage={Discount2.image}
-            productPrice={Discount2.price}
-            productDesc={Discount2.desc}
-          />
-        </Slider>
+        {discountedProducts && (
+          <Slider {...sliderSetting} className="" swipe={true}>
+            {discountedProducts.map((productArray, index) => {
+              const product = productArray[0];
+
+              return (
+                <DiscountBanner
+                  key={product._id}
+                  discountName={product.name}
+                  productImage={product.images[0]}
+                  discountDate={product.discount.name}
+                  productPrice={product.price}
+                  MRP={product.price}
+                />
+              );
+            })}
+          </Slider>
+        )}
       </div>
 
       <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
         <span className=" flex flex-col justify-center text-center items-center cursor-pointer ">
-          <PhoneIphoneIcon fontSize="large"/>
+          <PhoneIphoneIcon fontSize="large" />
           Phone
         </span>
         <span className=" flex flex-col justify-center text-center items-center gap-2 cursor-pointer">

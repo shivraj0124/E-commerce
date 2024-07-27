@@ -21,10 +21,10 @@ import {
   Search,
   Authentication,
 } from "./pages/index.js";
-import TopLayout from './Components/Home/TopLayout.jsx'
+import TopLayout from "./Components/Home/TopLayout.jsx";
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
-import  {ProductProvider } from "./Components/Context/ProductContext.jsx";
-
+import { ProductProvider } from "./Components/Context/ProductContext.jsx";
+import { AdminProvider } from "./Components/Context/AdminContext.jsx";
 const App = ({ location }) => {
   // const [isModalOpen, setIsModalOpen] = useState(false);
   // const handleModal = () => {
@@ -47,13 +47,13 @@ const App = ({ location }) => {
               <Route path="/" element={<TopLayout />}>
                 <Route exact path="/" element={<Home />} />
 
-              <Route exact path="/offers" element={<Offers />} />
-              <Route exact path="/buy-again" element={<BuyAgain />} />
-              <Route exact path="/my-account" element={<AboutUser />} />
-              <Route exact path="/cart" element={<Cart />} />
-              <Route exact path="/favourites" element={<UserFavourite />} />
-              <Route path="/search" element={<Search />} />
-            </Route>
+                <Route exact path="/offers" element={<Offers />} />
+                <Route exact path="/buy-again" element={<BuyAgain />} />
+                <Route exact path="/my-account" element={<AboutUser />} />
+                <Route exact path="/cart" element={<Cart />} />
+                <Route exact path="/favourites" element={<UserFavourite />} />
+                <Route path="/search" element={<Search />} />
+              </Route>
 
               <Route path="auth" element={<Authentication />}>
                 <Route index element={<LoginBox />} />
@@ -63,7 +63,8 @@ const App = ({ location }) => {
               </Route>
               <Route path="/admin">
                 <Route
-                  exact path="/admin/dashboard"
+                  exact
+                  path="/admin/dashboard"
                   element={<MainAdminContainer />}
                 />
               </Route>

@@ -1,17 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DensityMediumOutlinedIcon from "@mui/icons-material/DensityMediumOutlined";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link, useLocation } from "react-router-dom";
 import { ThemeContext } from "../Context/ThemeContext.jsx";
 import { AuthContext } from "../Context/AuthContext.jsx";
+import Badge from "@mui/material/Badge";
+
 const Navbar = ({ openmodal }) => {
   const location = useLocation();
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { isLogin, token, userDetails } = useContext(AuthContext);
 
-  const {isLogin } = useContext(AuthContext)
   return (
     <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between dark:bg-blue-700">
       <div className=" flex gap-7 items-center">
@@ -64,16 +67,28 @@ const Navbar = ({ openmodal }) => {
           data-tooltip-id="my-account-tooltip"
           data-tooltip-content="Favorites"
         >
-          <FavoriteBorderIcon />
+          {userDetails ? (
+            <Badge badgeContent={userDetails.likes.length} color="error">
+              <FavoriteBorderIcon />
+            </Badge>
+          ) : (
+            <FavoriteBorderIcon />
+          )}
         </Link>
-        
+
         <Link
           to="/cart"
           className="cursor-pointer flex"
           data-tooltip-id="my-account-tooltip"
           data-tooltip-content="Cart"
         >
-          <ShoppingCartOutlinedIcon />
+          {userDetails ? (
+            <Badge badgeContent={userDetails.cart.length} color="secondary">
+              <ShoppingCartIcon />
+            </Badge>
+          ) : (
+            <ShoppingCartOutlinedIcon />
+          )}
         </Link>
 
         <Link

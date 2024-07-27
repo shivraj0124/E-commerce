@@ -27,5 +27,4 @@ router.post("/likeDisLikeTheProduct", protect, likeDisLikeTheProduct);
 router.post("/editAddress", protect, editAddress);
 router.post("/updatePersonalInfo", protect, updatePersonalInfo);
 
-
 module.exports = router;
