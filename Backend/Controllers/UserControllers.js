@@ -10,47 +10,44 @@ const UserModel = require("../Models/UserModel");
 const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    const likes = await LikeModel.find({ user: userId }).populate("product");
+    const likes = await LikeModel.find({ user: userId }).populate({
+      path: "product",
+      populate: {
+        path: "discount",
+      },
+    });
     const getUser = await UserModel.findById(userId);
 
     let userCart = getUser.cart;
-    console.log(userCart);
+    // console.log(userCart);
     let allLikes = [];
     if (userCart && likes && likes.length > 0 && userCart.length > 0) {
-      for (let i = 0; i < likes.length; i++) {
-        for (let j = 0; j < userCart.length; j++) {
-          const objectIdString = likes[i]?.product?._id?.toString();
-          const objectIdString2 = userCart[j]?.product?.toString();
-          if (objectIdString === objectIdString2) {
-            let result = {
-              ...likes[i]._doc,
-              hasLiked: true,
-              hasAddedToCart: true,
-            };
-            allLikes.push(result);
-          } else {
-            let result = {
-              ...likes[i]._doc,
-              hasLiked: true,
-              hasAddedToCart: false,
-            };
-            allLikes.push(result);
-          }
-        }
-      }
-      // console.log(likes)
-      if (allLikes && allLikes.length > 0) {
-        res.send({
-          success: true,
-          message: "Likes fetched",
-          allLikes,
-        });
-      } else {
-        res.send({
-          success: false,
-          message: "Likes Not Found ",
-        });
-      }
+      const userCartProductIds = new Set(
+        userCart.map((item) => item?.product?.toString())
+      );
+
+       allLikes = likes.map((like) => {
+        const objectIdString = like?.product?._id?.toString();
+        const hasAddedToCart = userCartProductIds.has(objectIdString);
+
+        return {
+          ...like._doc,
+          hasLiked: true,
+          hasAddedToCart: hasAddedToCart,
+        };
+      });
+    }
+    if (allLikes.length > 0) {
+      res.send({
+        success: true,
+        message: "Likes fetched",
+        allLikes,
+      });
+    } else {
+      res.send({
+        success: false,
+        message: "Likes Not Found",
+      });
     }
   } catch (err) {
     res.send({
