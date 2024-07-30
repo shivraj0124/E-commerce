@@ -14,32 +14,32 @@ const getAllLikesByUser = async (req, res) => {
     const getUser = await UserModel.findById(userId);
 
     let userCart = getUser.cart;
-    console.log(userCart);
     let allLikes = [];
-    if (userCart && likes && likes.length > 0 && userCart.length > 0) {
+
+    if (likes && likes.length > 0) {
       for (let i = 0; i < likes.length; i++) {
-        for (let j = 0; j < userCart.length; j++) {
-          const objectIdString = likes[i]?.product?._id?.toString();
-          const objectIdString2 = userCart[j]?.product?.toString();
-          if (objectIdString === objectIdString2) {
-            let result = {
-              ...likes[i]._doc,
-              hasLiked: true,
-              hasAddedToCart: true,
-            };
-            allLikes.push(result);
-          } else {
-            let result = {
-              ...likes[i]._doc,
-              hasLiked: true,
-              hasAddedToCart: false,
-            };
-            allLikes.push(result);
+        const likedProductId = likes[i]?.product?._id?.toString();
+        let hasAddedToCart = false;
+
+        if (userCart && userCart.length > 0) {
+          for (let j = 0; j < userCart.length; j++) {
+            const cartProductId = userCart[j]?.product?.toString();
+            if (likedProductId === cartProductId) {
+              hasAddedToCart = true;
+              break; // Stop checking further if the product is found in the cart
+            }
           }
         }
+
+        let result = {
+          ...likes[i]._doc,
+          hasLiked: true,
+          hasAddedToCart: hasAddedToCart,
+        };
+        allLikes.push(result);
       }
-      // console.log(likes)
-      if (allLikes && allLikes.length > 0) {
+
+      if (allLikes.length > 0) {
         res.send({
           success: true,
           message: "Likes fetched",
@@ -48,9 +48,14 @@ const getAllLikesByUser = async (req, res) => {
       } else {
         res.send({
           success: false,
-          message: "Likes Not Found ",
+          message: "Likes Not Found",
         });
       }
+    } else {
+      res.send({
+        success: false,
+        message: "No likes or user cart found",
+      });
     }
   } catch (err) {
     res.send({
