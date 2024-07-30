@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Components/Context/AuthContext";
 import axios from "axios";
-import { LoaderIcon } from "react-hot-toast";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import ProductBox from "../ProductBox";
+
 const UserFavourite = () => {
   const { token } = useContext(AuthContext);
   const [userLikes, setUserLikes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [updateFlag, setUpdateFlag] = useState(false); // State to trigger useEffect
+
   const getAllLikesByUser = async () => {
     setLoading(true);
     try {
@@ -20,92 +21,47 @@ const UserFavourite = () => {
           },
         }
       );
-      setUserLikes(response.data.likes);
-      console.log(userLikes);
+      if (response.data.success) {
+        setUserLikes(response.data.allLikes);
+      }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
-  const calculateDiscountPrice = (originalPrice, discountPercentage) => {
-    const discount = originalPrice * (discountPercentage / 100);
-    const discountedPrice = originalPrice - discount;
-    return discountedPrice;
-  };
   useEffect(() => {
     getAllLikesByUser();
-  }, []);
-
+  }, [userLikes, updateFlag]);
+  const handleDislike = (productId) => {
+    setUserLikes((prevLikes) =>
+      prevLikes.filter((like) => like.product._id !== productId)
+    );
+    setUpdateFlag((prevFlag) => !prevFlag);
+  };
   return (
-    <div className=" p-20 w-screen flex justify-center flex-col gap-5 items-center bg-slate-100 dark:bg-slate-800 cursor-pointer">
-      {
-        loading ? (
-          <div>
-            <div className=" flex w-4/5 shadow-md rounded-md bg-white dark:bg-[#121212] p-5">
-              <div className="relative h-52 w-1/6">
-                <Skeleton className="absolute inset-0 h-full w-full object-cover rounded-md aspect-3/2" />
-              </div>
-            </div>
-          </div>
-        ) : (
-          // userLikes && userLikes.length > 0 ? (
-          userLikes.map((product) => (
-            <div className=" flex w-4/5 shadow-md rounded-md bg-white dark:bg-[#121212] p-5 gap-3">
-              <div className="relative h-52 w-1/6">
-                <img
-                  src={product.product.images[0]}
-                  alt="product image"
-                  className="absolute inset-0 h-full w-full object-cover rounded-md aspect-3/2"
-                />
-              </div>
-              <div className=" w-2/3 flex flex-col gap-3">
-                <span className=" font-bold text-3xl">
-                  {product.product.name}
-                </span>
-                <p className=" indent-4 overflow-hidden font-light text-medium">
-                  {product.product.description}
-                </p>
-              </div>
-              <div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-3xl font-oswald ">
-                    {/* {product.product.discount
-                    ? `₹${calculateDiscountPrice( 
-                        product.product.productPrice,
-                        product.product.discount.discountPercentage
-                      )}`
-                    : `₹${product.product.productPrice}`} */}
-                    ₹{product.product.price}
-                  </span>
-                  {/* <span className="flex items-center gap-1 text-center">
-                  <span className="font-light text-xl line-through text-center">
-                    {product.product.discount
-                      ? product.product.productPrice
-                      : ""}
-                  </span>{" "}
-                  <span className="text-green-600 font-semibold text-center">
-                    {product.product.discount
-                      ? `${product.product.discount}% off`
-                      : "No Discount"}
-                  </span>
-                </span>
-                {product.product.stock <= 5 && (
-                  <span className="text-red-500 font-semibold">
-                    Only {product.product.stock} left
-                  </span>
-                )} */}
-                </div>
-              </div>
-            </div>
-          ))
-        )
-        // )
-        // : (
-        //   <span>No Products Found</span>
-        // )
-      }
-      {}
+    <div className="p-5 w-full overflow-hidden flex flex-col items-center bg-slate-100 dark:bg-slate-800 gap-5">
+      {userLikes.map((product) => (
+        <ProductBox
+          key={product.product._id}
+          productId={product.product._id}
+          isProductLiked={true}
+          productImage={product.product.images[0]}
+          productName={product.product.name}
+          productDescription={product.product.description}
+          productPrice={product.product.price}
+          productCategory={product.product.category}
+          productBrand={product.product.brand}
+          // productDiscount={product.product.discount}
+          productDiscount={50}
+          handleDislike={handleDislike}
+          productStock={product.product.stock}
+          // productStock={8}
+          productRating={product.product.ratings}
+          productMRP={product.product.price}
+          isProductAddedToCart={product.hasAddedToCart}
+        />
+      ))}
     </div>
   );
 };

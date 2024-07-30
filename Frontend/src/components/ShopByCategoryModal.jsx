@@ -6,6 +6,7 @@ import { ThemeContext } from "./Context/ThemeContext.jsx";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { AuthContext } from "./Context/AuthContext.jsx";
+import Cookies from 'js-cookie';
 
 const ShopByCategoryModal = ({ open, close, home }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,6 +28,7 @@ const ShopByCategoryModal = ({ open, close, home }) => {
   const removeAccount = () =>{
     setIsLogin(false)
     setToken(undefined)
+    Cookies.remove("token")
     close()
   }
   return ReactDOM.createPortal(

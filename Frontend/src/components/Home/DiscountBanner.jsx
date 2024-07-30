@@ -1,3 +1,4 @@
+import { Interests } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 
 const DiscountBanner = ({
@@ -9,7 +10,10 @@ const DiscountBanner = ({
   productDesc,
 }) => {
   const calculateTimeLeft = () => {
-    const difference = +new Date(discountDate) - +new Date();
+    const targetDate = new Date(discountDate);
+    const now = new Date();
+    const difference = targetDate - now;
+
     let timeLeft = {};
     if (difference > 0) {
       timeLeft = {
@@ -35,26 +39,26 @@ const DiscountBanner = ({
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-
+    // console.log(timeLeft)
     return () => clearInterval(timer);
-  }, [discountDate]);
+  }, [discountDate]); 
 
-  const timerComponents = Object.keys(timeLeft).map((interval) => (
-    <div
-      key={interval}
-      className="flex flex-col max-md:text-gray-600  max-md:font-bold max-md:border-gray-400 items-center bg-white text-center sm:p-3 rounded-lg border-slate-300 sm:border-4 border-2 p-2"
-    >
-      <div className="">
-        <div className="text-xs max-md:text-[14px] ">
-          {interval.toUpperCase()}
-        </div>
-
-        <div className="sm:text-4xl font-bold text-xs max-md:text-sm">
-          {timeLeft[interval]}
+  const timerComponents = Object.keys(timeLeft).map((interval, index) => {
+    // console.log(interval)
+    return (
+      <div
+        key={index}
+        className="flex flex-col items-center bg-white text-center p-2 rounded-lg border-2 border-slate-300"
+      >
+        <div>
+          <div className="text-xs">{interval.toUpperCase()}</div>
+          <div className="sm:text-4xl font-bold text-xs">
+            {timeLeft[interval]}
+          </div>
         </div>
       </div>
-    </div>
-  ));
+    );
+  });
 
   return (
     <>

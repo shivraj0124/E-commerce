@@ -47,7 +47,7 @@ const Home = () => {
   useEffect(() => {
     getDiscountedProducts();
   }, []);
-  console.log(discountedProducts);
+  // console.log(discountedProducts);
   const Discount1 = {
     name: "Buy One Get One",
     image:
@@ -107,7 +107,7 @@ const Home = () => {
                   key={product._id}
                   discountName={product.name}
                   productImage={product.images[0]}
-                  discountDate={product.discount.name}
+                  discountDate={product.discount.endDate}
                   productPrice={product.price}
                   MRP={product.price}
                 />

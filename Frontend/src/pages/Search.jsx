@@ -5,7 +5,7 @@ import SearchFilter from "../Components/SearchPage/SearchFilter.jsx";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
-
+import { AuthContext } from "../Components/Context/AuthContext.jsx";
 const Search = () => {
   const [sortOption, showSortOption] = useState(false);
   const [filtersOption, showFiltersOption] = useState(false);
@@ -22,18 +22,22 @@ const Search = () => {
   }, [filtersOption]);
 
   const { searchTerm } = useContext(ProductContext);
-
+  
   const [products, setProducts] = useState([]);
-
+  const { userDetails } = useContext(AuthContext);
+  
   const getAllProducts = async (productKeyword, productCategory) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`,
+        {
+          userId: userDetails._id,
+        }
       );
 
       if (response.data.success) {
-        setProducts(response.data.products);
-
+        setProducts(response.data.dataOfP);
+        console.log(response)
         setLoading(false);
       }
     } catch (error) {
@@ -45,7 +49,7 @@ const Search = () => {
   useEffect(() => {
     getAllProducts();
   }, []);
-
+  console.log(products);
   return (
     <div className="p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] overflow-x-hidden">
       <SearchFilter
@@ -110,6 +114,7 @@ const Search = () => {
                 productImage={product.images}
                 productDiscount={product.discount}
                 loading={false}
+                // hasLiked={}
               />
             ))
           )}
