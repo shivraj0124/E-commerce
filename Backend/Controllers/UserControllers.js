@@ -10,51 +10,43 @@ const UserModel = require("../Models/UserModel");
 const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    const likes = await LikeModel.find({ user: userId }).populate("product");
+    const likes = await LikeModel.find({ user: userId }).populate({
+      path: "product",
+      populate: {
+        path: "discount",
+      },
+    });
     const getUser = await UserModel.findById(userId);
 
     let userCart = getUser.cart;
+    // console.log(userCart);
     let allLikes = [];
+    if (userCart && likes && likes.length > 0 && userCart.length > 0) {
+      const userCartProductIds = new Set(
+        userCart.map((item) => item?.product?.toString())
+      );
 
-    if (likes && likes.length > 0) {
-      for (let i = 0; i < likes.length; i++) {
-        const likedProductId = likes[i]?.product?._id?.toString();
-        let hasAddedToCart = false;
+       allLikes = likes.map((like) => {
+        const objectIdString = like?.product?._id?.toString();
+        const hasAddedToCart = userCartProductIds.has(objectIdString);
 
-        if (userCart && userCart.length > 0) {
-          for (let j = 0; j < userCart.length; j++) {
-            const cartProductId = userCart[j]?.product?.toString();
-            if (likedProductId === cartProductId) {
-              hasAddedToCart = true;
-              break; // Stop checking further if the product is found in the cart
-            }
-          }
-        }
-
-        let result = {
-          ...likes[i]._doc,
+        return {
+          ...like._doc,
           hasLiked: true,
           hasAddedToCart: hasAddedToCart,
         };
-        allLikes.push(result);
-      }
-
-      if (allLikes.length > 0) {
-        res.send({
-          success: true,
-          message: "Likes fetched",
-          allLikes,
-        });
-      } else {
-        res.send({
-          success: false,
-          message: "Likes Not Found",
-        });
-      }
+      });
+    }
+    if (allLikes.length > 0) {
+      res.send({
+        success: true,
+        message: "Likes fetched",
+        allLikes,
+      });
     } else {
       res.send({
         success: false,
-        message: "No likes or user cart found",
+        message: "Likes Not Found",
       });
     }
   } catch (err) {
