@@ -8,7 +8,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import toast, { LoaderIcon, Toaster } from "react-hot-toast";
-import { AuthContext } from "./Components/Context/AuthContext";
+import { AuthContext } from "./Context/AuthContext";
 import axios from "axios";
 
 const ProductBox = ({
@@ -27,7 +27,7 @@ const ProductBox = ({
   productDescription,
   productStock,
   isLoading,
-  handleDislike
+  handleDislike,
 }) => {
   const calculateDiscountPrice = (originalPrice, discountPercentage) => {
     const discount = originalPrice * (discountPercentage / 100);
@@ -58,7 +58,7 @@ const ProductBox = ({
       console.log(response);
       if (response.data.success) {
         toast.success("Product Disliked!!!");
-        handleDislike()
+        handleDislike();
       }
     } catch (error) {
       toast.error(error.response?.data.message);
@@ -66,7 +66,28 @@ const ProductBox = ({
     }
     setLikeLoader(false);
   };
-  console.log("user", userDetails._id);
+  const addRemoveFromCart = async () => {
+    setCartLoader(true)
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/likeDisLikeTheProduct`,
+        {
+          userId: userDetails._id,
+          productId: productID,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+    } catch (error) {
+      toast.error(error.response?.data.message);
+      console.log(error.response?.data);
+    }
+  };
 
   return (
     <div className=" size-full  bg-white dark:bg-[#121212] rounded-md shadow-md p-6 cursor-pointer flex ">
@@ -182,16 +203,21 @@ const ProductBox = ({
             <div>
               <span>
                 <span className="font-bold text-4xl font-oswald ">
-                  {productDiscount
-                    ? `₹${calculateDiscountPrice(productMRP, productDiscount)}`
+                  {productDiscount.discountPercentage
+                    ? `₹${calculateDiscountPrice(
+                        productMRP,
+                        productDiscount.discountPercentage
+                      )}`
                     : `₹${productMRP}`}
                 </span>
                 <span className="flex items-center gap-2 text-center">
                   <span className="font-light text-2xl line-through text-center">
-                    ₹{productDiscount ? productPrice : ""}
+                    ₹{productDiscount.discountPercentage ? productPrice : ""}
                   </span>{" "}
                   <span className="text-green-600 font-semibold text-center text-medium">
-                    {productDiscount ? `${productDiscount}% off` : ""}
+                    {productDiscount.discountPercentage
+                      ? `${productDiscount.discountPercentage}% off`
+                      : ""}
                   </span>
                 </span>
               </span>

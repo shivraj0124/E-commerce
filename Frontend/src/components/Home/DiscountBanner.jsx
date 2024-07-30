@@ -8,6 +8,7 @@ const DiscountBanner = ({
   productPrice,
   MRP,
   productDesc,
+  index
 }) => {
   const calculateTimeLeft = () => {
     const targetDate = new Date(discountDate);
@@ -32,14 +33,14 @@ const DiscountBanner = ({
     }
     return timeLeft;
   };
-
+  
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-    // console.log(timeLeft)
+    console.log(discountName)
     return () => clearInterval(timer);
   }, [discountDate]); 
 
@@ -63,6 +64,7 @@ const DiscountBanner = ({
   return (
     <>
       <div className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full  max-md:hidden">
+      
         <div className="sm:text-7xl font-bold flex items-center text-3xl text-center mb-6 sm:mb-0">
           {discountName}
         </div>

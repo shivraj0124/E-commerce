@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
       setUserDetails(null);
     }
   };
-  console.log(userDetails)
+  
   useEffect(() => {
     if (token) {
       verifyAuth();

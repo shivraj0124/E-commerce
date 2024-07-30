@@ -22,34 +22,37 @@ const Search = () => {
   }, [filtersOption]);
 
   const { searchTerm } = useContext(ProductContext);
-  
+
   const [products, setProducts] = useState([]);
   const { userDetails } = useContext(AuthContext);
-  
-  const getAllProducts = async (productKeyword, productCategory) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`,
-        {
-          userId: userDetails._id,
-        }
-      );
 
-      if (response.data.success) {
-        setProducts(response.data.dataOfP);
-        console.log(response)
+  console.log("user Id is ", userDetails._id);
+  const getAllProducts = async (productKeyword, productCategory) => {
+    if (userDetails) {
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`,
+          {
+            userId: userDetails._id,
+          }
+        );
+
+        if (response.data.success) {
+          setProducts(response.data.dataOfP);
+          console.log(response.data.dataOfP);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
         setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     getAllProducts();
   }, []);
-  console.log(products);
+
   return (
     <div className="p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] overflow-x-hidden">
       <SearchFilter

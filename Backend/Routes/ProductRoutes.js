@@ -10,7 +10,7 @@ const {
   getAllLikesByProduct,
 } = require("../Controllers/ProductController");
 
-router.get("/getAllProducts", getAllProducts);
+router.post("/getAllProducts", getAllProducts);
 router.post("/getAllProductsByCategory", getAllProductsByCategory);
 router.get("/getSingleProduct/:id", getSingleProduct);
 router.get("/getAllCategories", getAllCategories);

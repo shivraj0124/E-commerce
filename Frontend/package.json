@@ -34,7 +34,8 @@
     "react-spinners": "^0.14.1",
     "react-step-wizard": "^5.3.11",
     "react-tooltip": "^5.27.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "swiper": "^11.1.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

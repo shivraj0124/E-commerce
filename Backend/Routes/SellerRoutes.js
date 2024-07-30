@@ -11,6 +11,6 @@ const { protect2 } = require("../Middleware/authMiddleware");
 router.post("/addNewProduct", addNewProduct);
 router.post("/getSellerFullData", protect2, getSellerFullData);
 router.post("/updateProduct", protect2, updateProduct);
-router.post("/addDiscount", protect2, addDiscount);
+router.post("/addDiscount", addDiscount);
 
 module.exports = router;
