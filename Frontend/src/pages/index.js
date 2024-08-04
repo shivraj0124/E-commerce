@@ -6,3 +6,4 @@ export { default as Cart } from "./Cart.jsx";
 export { default as UserFavourite } from "./UserFavourite.jsx";
 export { default as Search } from "./Search.jsx";
 export { default as Authentication } from "./Authentication.jsx";
+export { default as Product } from "./Product.jsx";

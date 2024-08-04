@@ -26,7 +26,6 @@ const Search = () => {
   const [products, setProducts] = useState([]);
   const { userDetails } = useContext(AuthContext);
 
-  console.log("user Id is ", userDetails._id);
   const getAllProducts = async (productKeyword, productCategory) => {
     if (userDetails) {
       try {
@@ -39,7 +38,7 @@ const Search = () => {
 
         if (response.data.success) {
           setProducts(response.data.dataOfP);
-          console.log(response.data.dataOfP);
+
           setLoading(false);
         }
       } catch (error) {
@@ -53,6 +52,13 @@ const Search = () => {
     getAllProducts();
   }, []);
 
+  const onProductUpdate = (productId, updatedFields) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product._id === productId ? { ...product, ...updatedFields } : product
+      )
+    );
+  };
   return (
     <div className="p-1 bg-slate-200 flex w-screen h-full gap-2 sm:flex-row flex-col dark:bg-[#121212] overflow-x-hidden">
       <SearchFilter
@@ -117,7 +123,9 @@ const Search = () => {
                 productImage={product.images}
                 productDiscount={product.discount}
                 loading={false}
-                // hasLiked={}
+                hasLiked={product.hasLiked}
+                hasAddedToCart={product.hasAddedToCart}
+                onProductUpdate={onProductUpdate}
               />
             ))
           )}

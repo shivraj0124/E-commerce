@@ -10,6 +10,7 @@ const UserModel = require("../Models/UserModel");
 const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
+
     const likes = await LikeModel.find({ user: userId }).populate({
       path: "product",
       populate: {
@@ -17,33 +18,49 @@ const getAllLikesByUser = async (req, res) => {
       },
     });
     const getUser = await UserModel.findById(userId);
-
+    console.log("User Got", getUser);
     let userCart = getUser.cart;
     // console.log(userCart);
     let allLikes = [];
-    if (userCart && likes && likes.length > 0 && userCart.length > 0) {
-      const userCartProductIds = new Set(
-        userCart.map((item) => item?.product?.toString())
-      );
+    if (likes && likes.length > 0) {
+      if (userCart && userCart.length > 0) {
+        const userCartProductIds = new Set(
+          userCart.map((item) => item?.product?.toString())
+        );
 
-       allLikes = likes.map((like) => {
-        const objectIdString = like?.product?._id?.toString();
-        const hasAddedToCart = userCartProductIds.has(objectIdString);
+        allLikes = likes.map((like) => {
+          const objectIdString = like?.product?._id?.toString();
+          const hasAddedToCart = userCartProductIds.has(objectIdString);
 
-        return {
-          ...like._doc,
-          hasLiked: true,
-          hasAddedToCart: hasAddedToCart,
-        };
-      });
+          return {
+            ...like._doc,
+            hasLiked: true,
+            hasAddedToCart: hasAddedToCart,
+          };
+        });
+      } else {
+        allLikes = likes.map((like) => {
+          const objectIdString = like?.product?._id?.toString();
+          // const hasAddedToCart = userCartProductIds.has(objectIdString);
+
+          return {
+            ...like._doc,
+            hasLiked: true,
+            hasAddedToCart: false,
+          };
+        });
+      }
     }
     if (allLikes.length > 0) {
+      console.log("we got this", allLikes);
       res.send({
         success: true,
         message: "Likes fetched",
         allLikes,
       });
     } else {
+      console.log("we got this not", allLikes);
+
       res.send({
         success: false,
         message: "Likes Not Found",
@@ -336,16 +353,20 @@ const updatePersonalInfo = async (req, res) => {
 const getCartInfo = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming user ID is available in req.user
-    let user = await UserModel.findById(userId).populate("cart.product").exec();
-    // console.log(user);
+    let user = await UserModel.findById(userId)
+      .populate({
+        path: "cart.product",
+        populate: {
+          path: "discount",
+        },
+      })
+      .exec();
 
     if (!user) {
       return res.send({ message: "User not found" });
     }
-    const arrayOfProductsInCart = user.cart;
-    const arrayOfUserLikes = user.likes;
 
-    // console.log('arrayOfUserLikes',arrayOfUserLikes)
+    const arrayOfProductsInCart = user.cart;
     let dataOfP = [];
     for (let i = 0; i < arrayOfProductsInCart.length; i++) {
       let hasLiked = false;
@@ -358,12 +379,13 @@ const getCartInfo = async (req, res) => {
         hasLiked = true;
       }
       let result = {
-        ...arrayOfProductsInCart[i]._doc, // Spread operator to include all product details
+        ...arrayOfProductsInCart[i]._doc,
         hasLiked,
         hasAddedToCart: true,
       };
       dataOfP.push(result);
     }
+
     let finalData = {
       ...user._doc,
       cart: dataOfP,
@@ -381,6 +403,8 @@ const getCartInfo = async (req, res) => {
     });
   }
 };
+
+
 
 const geSingleUser = async (req, res) => {
   try {

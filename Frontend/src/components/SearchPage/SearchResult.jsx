@@ -7,6 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { AuthContext } from "../Context/AuthContext.jsx";
 import axios from "axios";
+import {ProductContext} from "../Context/ProductContext.jsx";
 
 const SearchResult = ({
   productid,
@@ -20,10 +21,11 @@ const SearchResult = ({
   productImage,
   productDiscount,
   loading,
+  hasLiked,
+  hasAddedToCart,
+  onProductUpdate,
 }) => {
-  const { userDetails, token } = useContext(AuthContext);
-
-  const [userLikes, setUserLikes] = useState([]);
+  const { userDetails, token , updateFields } = useContext(AuthContext);
   const [loadingLike, setLoadingLike] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
   const calculateDiscountPrice = (originalPrice, discountPercentage) => {
@@ -32,48 +34,12 @@ const SearchResult = ({
     return discountedPrice;
   };
 
-  const getAllLikesByUser = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/getAllLikesByUser`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUserLikes(response.data.likes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const data = {
-    _id: "669c116adcc472ba526ef81b",
-    name: "Iphone 15 Pro Max",
-    description:
-      "iPhone 15 Pro Max, a titanium marvel, boasts an aerospace-grade build, making it the lightest Pro model ever. The A17 Pro Chip marks a historic leap in Apple GPUs, delivering unparalleled graphics performance and immersive gaming experiences. The camera system shines with a 48 MP Main camera, offering remarkable detail and automatic portrait enhancements. Convenience is key with the Action button for quick tasks and Focus filters. Plus, it's USB 3 compatible, revolutionizing data transfer speeds. This iPhone even shares its charging cable with your Mac or iPad. Embrace innovation, cut cable clutter, and elevate your mobile experience with the iPhone 15 Pro Max.",
-    price: 139990,
-    category: "669bba393939bbd37a7bf346",
-    brand: "Apple",
-    stock: 50,
-    ratings: 0,
-    numReviews: 0,
-    images: [
-      "https://iplanet.one/cdn/shop/files/iPhone_15_Pro_Max_Natural_Titanium_PDP_Image_Position-1__en-IN_fb4edf23-fd9d-4921-ab06-aec128ba2698.jpg?v=1695436281&width=1445",
-      "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-max-family-select?wid=4000&hei=3794&fmt=jpeg&qlt=90&.v=1692893974945",
-      "https://www.apple.com/newsroom/videos/iphone-15-pro-action-button/posters/Apple-iPhone-15-Pro-lineup-Action-button-230912.jpg.large_2x.jpg",
-    ],
-    likes: ["669d438c6ce5a304c160efc2"],
-    reviews: [],
-    createdAt: "2024-07-20T19:35:06.001Z",
-    updatedAt: "2024-07-21T17:21:16.432Z",
-    __v: 17,
-  };
   const [Loading, setLoading] = useState(false);
   const likeDislikeProduct = async (productid) => {
     setLoadingLike(true);
     try {
+      // Optimistically update UI
+      onProductUpdate(productid, { hasLiked: !hasLiked });
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/likeDisLikeTheProduct`,
         {
@@ -87,27 +53,28 @@ const SearchResult = ({
           },
         }
       );
-      console.log(response);
-
-      if (response.data.success) {
+      // Check response and revert optimistic update if needed
+      if (!response.data.success) {
+        onProductUpdate(productid, { hasLiked });
+        updateFields();
+        toast.error(response.data.message);
+      } else {
         toast.success(response.data.message);
-        console.log(response);
       }
     } catch (error) {
+      onProductUpdate(productid, { hasLiked });
       toast.error(error.response?.data.message);
-      console.log(error);
+      console.log(error)
+    } finally {
+      setLoadingLike(false);
     }
-    setLoadingLike(false);
   };
 
-  useEffect(() => {
-    if (token) {
-      getAllLikesByUser();
-    }
-  }, [token]);
   const AddProductToCart = async (productID) => {
     setButtonLoading(true);
     try {
+      // Optimistically update UI
+      onProductUpdate(productID, { hasAddedToCart: true });
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/addToCart`,
         {
@@ -121,10 +88,35 @@ const SearchResult = ({
           },
         }
       );
+      if (!response.data.success) {
+        onProductUpdate(productID, { hasAddedToCart: false });
+        updateFields();
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      onProductUpdate(productID, { hasAddedToCart: false });
+      toast.error("Something Went Wrong");
+    } finally {
+      setButtonLoading(false);
+    }
+  };
+  const removeProductFromCart = async () => {
+    setButtonLoading(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/removeFromCart`,
+        { productId: productid },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (response.data.success) {
+        onProductUpdate(productid, { hasAddedToCart: false });
+        updateFields();
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
+        
       }
     } catch (error) {
       console.log(error);
@@ -277,11 +269,24 @@ const SearchResult = ({
                   </span>
                 )}
               </div>
-              <button
-                className="bg-blue-600 text-white hover:bg-blue-700 py-3 rounded-sm font-bold px-8"
-                onClick={() => AddProductToCart(productid)}
-              >
-                {buttonLoading ? <LoaderIcon /> : "Add to Cart"}
+              <button className=" ">
+                {buttonLoading ? (
+                  <LoaderIcon />
+                ) : hasAddedToCart ? (
+                  <span
+                    className=" bg-red-600 hover:bg-red-700 px-8 py-3 text-white   rounded-sm font-bold "
+                    onClick={() => removeProductFromCart(productid)}
+                  >
+                    Remove From Cart
+                  </span>
+                ) : (
+                  <span
+                    className=" bg-blue-600 hover:bg-blue-700 px-8 py-3 text-white   rounded-sm font-bold "
+                    onClick={() => AddProductToCart(productid)}
+                  >
+                    Add To Cart
+                  </span>
+                )}
               </button>
             </div>
             <span
@@ -290,7 +295,7 @@ const SearchResult = ({
             >
               {loadingLike ? (
                 <LoaderIcon />
-              ) : userLikes && userLikes.includes(productid) ? (
+              ) : hasLiked ? (
                 <FavoriteIcon sx={{ color: "red" }} />
               ) : (
                 <FavoriteBorderIcon />
@@ -303,7 +308,6 @@ const SearchResult = ({
         <div className="h-full sm:hidden bg-white dark:bg-[#121212] rounded-md w-full gap-2 shadow-md flex px-3 py-3">
           <div className="relative h-32 w-1/3 ">
             <Skeleton
-              src="https://switch.com.ph/cdn/shop/files/ROSA_Apple_Watch_Ultra_2_LTE_49mm_Titanium_Blue_Black_Trail_Loop_PDP_Image_Position-1.jpg?v=1698388489&width=1000"
               alt="product image"
               className="absolute inset-0 h-full w-full object-cover"
             />
@@ -342,7 +346,7 @@ const SearchResult = ({
         <div className="h-full sm:hidden bg-white dark:bg-[#121212] rounded-md w-full gap-2 shadow-md flex px-3 py-3 mb-5">
           <div className="relative h-32 w-1/3 ">
             <img
-              src="https://switch.com.ph/cdn/shop/files/ROSA_Apple_Watch_Ultra_2_LTE_49mm_Titanium_Blue_Black_Trail_Loop_PDP_Image_Position-1.jpg?v=1698388489&width=1000"
+              // src={productImage[0]}
               alt="product image"
               className="absolute inset-0 h-full w-full object-cover"
             />
@@ -350,24 +354,61 @@ const SearchResult = ({
           <div className=" flex flex-col w-2/3 justify-between">
             <div className=" flex flex-col justify-between">
               <div className=" ">
-                <span className=" text-xl font-bold">{data.name}</span>
+                <span className=" text-xl font-bold">{productName}</span>
                 <div className=" w-full">
                   <p className="line-clamp-2 overflow-hidden text-ellipsis text-xs">
-                    {data.description}
+                    {productDesc}
                   </p>
                 </div>
                 <div className=" font-semibold text-xl ml-3 flex justify-between items-center m-2">
-                  <span>₹{data.price}</span>
-                  <span className=" font-light line-through">₹59999</span>
-                  <span className=" text-green-600 text-sm ">20% off</span>
+                  <span>
+                    {productDiscount
+                      ? `₹${calculateDiscountPrice(
+                          productPrice,
+                          productDiscount.discountPercentage
+                        )}`
+                      : `₹${productPrice}`}
+                  </span>
+                  <span className=" font-light line-through">
+                    {productDiscount ? productPrice : ""}
+                  </span>
+                  <span className=" text-green-600 text-sm ">
+                    {productDiscount
+                      ? `${productDiscount.discountPercentage}% off`
+                      : ""}
+                  </span>
                 </div>
               </div>
             </div>
             <div className=" flex items-center justify-around mt-3">
-              <button className="bg-blue-600 text-white hover:bg-blue-700 py-3 rounded-sm font-bold px-8">
-                Add to Cart
+              <button className="">
+                {buttonLoading ? (
+                  <LoaderIcon />
+                ) : hasAddedToCart ? (
+                  <span
+                    className=" bg-red-600 hover:bg-red-700 px-8 py-3 text-white   rounded-sm font-bold "
+                    onClick={() => removeProductFromCart(productid)}
+                  >
+                    Remove From Cart
+                  </span>
+                ) : (
+                  <span
+                    className=" bg-blue-600 hover:bg-blue-700 px-8 py-3 text-white   rounded-sm font-bold "
+                    onClick={() => AddProductToCart(productid)}
+                  >
+                    Add To Cart
+                  </span>
+                )}
               </button>
-              <FavoriteBorderIcon />
+              <span onClick={() => likeDislikeProduct(productid)}>
+                {loadingLike ? (
+                  <LoaderIcon />
+                ) : hasLiked ? (
+                  <FavoriteIcon sx={{ color: "red" }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )}
+              </span>
             </div>
           </div>
         </div>

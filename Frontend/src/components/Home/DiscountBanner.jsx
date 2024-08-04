@@ -1,5 +1,6 @@
 import { Interests } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ProductContext } from "../Context/ProductContext";
 
 const DiscountBanner = ({
   discountName,
@@ -8,8 +9,10 @@ const DiscountBanner = ({
   productPrice,
   MRP,
   productDesc,
-  index
+  index,
+  productId,
 }) => {
+  const { openProductPage } = useContext(ProductContext);
   const calculateTimeLeft = () => {
     const targetDate = new Date(discountDate);
     const now = new Date();
@@ -33,16 +36,16 @@ const DiscountBanner = ({
     }
     return timeLeft;
   };
-  
+
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-    console.log(discountName)
+
     return () => clearInterval(timer);
-  }, [discountDate]); 
+  }, [discountDate]);
 
   const timerComponents = Object.keys(timeLeft).map((interval, index) => {
     // console.log(interval)
@@ -63,8 +66,13 @@ const DiscountBanner = ({
 
   return (
     <>
-      <div className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full  max-md:hidden">
-      
+      <div
+        className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full  max-md:hidden"
+        onClick={() => {
+          openProductPage(productId);
+        }}
+      >
+        {/* <span>{index}</span> */}
         <div className="sm:text-7xl font-bold flex items-center text-3xl text-center mb-6 sm:mb-0">
           {discountName}
         </div>

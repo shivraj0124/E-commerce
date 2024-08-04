@@ -243,7 +243,7 @@ const verifyToken = async (req, res) => {
       message: "Token is valid",
       user: req.user,
     });
-    console.log(req.user);
+   
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }

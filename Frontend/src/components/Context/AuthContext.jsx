@@ -9,7 +9,9 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(
     Cookies.get("token") ? Cookies.get("token") : undefined
   );
-
+  const updateFields = () => {
+    verifyAuth();
+  };
   const verifyAuth = async () => {
     try {
       const response = await axios.get(
@@ -22,19 +24,21 @@ const AuthProvider = ({ children }) => {
       );
       setIsLogin(true);
       setUserDetails(response.data.user);
+      // console.log(response);
     } catch (error) {
       console.log("Verification Error:", error);
       setIsLogin(false);
       setUserDetails(null);
     }
   };
-  
+
   useEffect(() => {
     if (token) {
       verifyAuth();
     }
   }, [token]);
   const value = {
+    updateFields,
     isLogin,
     setIsLogin,
     userDetails,

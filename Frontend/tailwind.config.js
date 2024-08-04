@@ -10,11 +10,11 @@ export default {
         1: "1",
       },
       filter: {
-        'brightness-90': 'brightness(0.9)',
-        'contrast-110': 'contrast(1.1)',
+        "brightness-90": "brightness(0.9)",
+        "contrast-110": "contrast(1.1)",
       },
       mixBlendMode: {
-        'multiply': 'multiply',
+        multiply: "multiply",
       },
     },
   },

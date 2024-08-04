@@ -1,17 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "./Context/ThemeContext.jsx";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { AuthContext } from "./Context/AuthContext.jsx";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+import axios from "axios";
+import { ProductContext } from "./Context/ProductContext.jsx";
 
 const ShopByCategoryModal = ({ open, close, home }) => {
   const [isVisible, setIsVisible] = useState(false);
   const modalRoot = document.getElementById("portal");
+  const [productsLoading, setProductsLoading] = useState(false);
+  const navigate = useNavigate();
+  const getAllCategories = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllCategories`
+      );
+      if (response.data.success) {
+        setCategories(response.data.categories);
+      }
+    } catch (error) {}
+  };
+
+  const { setProductsByCategory } = useContext(ProductContext);
   useEffect(() => {
+    getAllCategories();
     if (open) {
       setIsVisible(true);
     } else {
@@ -20,19 +37,41 @@ const ShopByCategoryModal = ({ open, close, home }) => {
       }, 300);
     }
   }, [open]);
-  const {isLogin , setIsLogin , userDetails , setToken} = useContext(AuthContext);
-  
-  const {theme , toggleTheme} = useContext(ThemeContext)
+  const { isLogin, setIsLogin, userDetails, setToken } =
+    useContext(AuthContext);
+  const [categories, setCategories] = useState([]);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   if (!open && !isVisible) return null;
-  
-  const removeAccount = () =>{
-    setIsLogin(false)
-    setToken(undefined)
-    Cookies.remove("token")
-    close()
-  }
+
+  const removeAccount = () => {
+    setIsLogin(false);
+    setToken(undefined);
+    Cookies.remove("token");
+    close();
+  };
+
+  const openCategoryPage = async (categoryName) => {
+    setProductsLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/v1/product/getAllProductsByCategory`,
+        { category: categoryName }
+      );
+
+      setProductsByCategory(response.data.products);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      navigate(`/category/${categoryName.name}`);
+      close;
+      setProductsLoading(false);
+    }
+  };
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex justify-start">
+    <div className="fixed inset-0 flex justify-start z-10">
       <div
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           open ? "opacity-45" : "opacity-0"
@@ -93,24 +132,17 @@ const ShopByCategoryModal = ({ open, close, home }) => {
                 Categories
               </span>
               <div className="flex flex-col mt-1">
-                <span
-                  className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"
-                  onClick={() => openFeaturePage("mobile-phones")}
-                >
-                  Mobile Phones
-                </span>
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
-                  Laptop & Computers
-                </span>
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
-                  Powerbank & Adapters
-                </span>
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
-                  Camera & Gears
-                </span>
-                <span className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5">
-                  Others
-                </span>
+                {categories.map((category, index) => (
+                  <span
+                    className=" hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5 "
+                    key={index}
+                    onClick={() => {
+                      openCategoryPage(category._id);
+                    }}
+                  >
+                    {category.name}
+                  </span>
+                ))}
               </div>
             </div>
             <hr className=" border-blue-800" />
@@ -138,7 +170,7 @@ const ShopByCategoryModal = ({ open, close, home }) => {
                   {isLogin ? "My account" : "Login"}
                 </Link>
                 <span
-                onClick={removeAccount}
+                  onClick={removeAccount}
                   className={
                     isLogin
                       ? " hover:bg-blue-700 cursor-pointer text-md sm:text-lg p-3 px-5"

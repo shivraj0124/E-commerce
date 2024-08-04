@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -20,24 +20,15 @@ import {
   UserFavourite,
   Search,
   Authentication,
+  Product,
 } from "./pages/index.js";
 import TopLayout from "./Components/Home/TopLayout.jsx";
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
 import { ProductProvider } from "./Components/Context/ProductContext.jsx";
 import { AdminProvider } from "./Components/Context/AdminContext.jsx";
+import Category from "./pages/Category.jsx";
+
 const App = ({ location }) => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const handleModal = () => {
-  //   setIsModalOpen(true);
-  // };
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [category, setCategory] = useState("All Category");
-
-  // const setHome = () => {
-  //   return <Navigate to="/" />;
-  // };
-  // const isAuth = location.pathname.startsWith("/auth");
-
   return (
     <ProductProvider>
       <AuthProvider>
@@ -53,6 +44,8 @@ const App = ({ location }) => {
                 <Route exact path="/cart" element={<Cart />} />
                 <Route exact path="/favourites" element={<UserFavourite />} />
                 <Route path="/search" element={<Search />} />
+                <Route path="/category/*" element={<Category />} />
+                <Route path="/product/*" element={<Product />} />
               </Route>
 
               <Route path="auth" element={<Authentication />}>
