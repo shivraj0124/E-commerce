@@ -25,6 +25,8 @@ import TopLayout from "./Components/Home/TopLayout.jsx";
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
 import { ProductProvider } from "./Components/Context/ProductContext.jsx";
 import { AdminProvider } from "./Components/Context/AdminContext.jsx";
+import MainDashboard from "./Components/AdminDashboard/AdminComponents/MainDashboard.jsx";
+import ProductAdmin from "./Components/AdminDashboard/ProductComponents/ProductAdmin.jsx"
 const App = ({ location }) => {
   // const [isModalOpen, setIsModalOpen] = useState(false);
   // const handleModal = () => {
@@ -61,11 +63,18 @@ const App = ({ location }) => {
                 <Route path="register-user" element={<UserSignupBox />} />
                 <Route path="register-seller" element={<SellerSignupBox />} />
               </Route>
-              <Route path="/admin">
+              <Route path="/admin" element={<MainAdminContainer />}>
                 <Route
                   exact
                   path="/admin/dashboard"
-                  element={<MainAdminContainer />}
+                  element={<MainDashboard/>}
+                  
+                />
+                <Route
+                  exact
+                  path="/admin/products"
+                  element={<ProductAdmin/>}
+                  
                 />
               </Route>
             </Routes>
