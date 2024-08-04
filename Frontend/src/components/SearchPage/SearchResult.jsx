@@ -87,15 +87,14 @@ const SearchResult = ({
           },
         }
       );
+      console.log(response);
+
       if (response.data.success) {
-        if (response.data.message === "Product Disliked Successfully.") {
-          setUserLikes(userLikes.filter((id) => id !== productid));
-        } else if (response.data.message === "Product Liked Successfully.") {
-          setUserLikes([...userLikes, productid]);
-        }
         toast.success(response.data.message);
+        console.log(response);
       }
     } catch (error) {
+      toast.error(error.response?.data.message);
       console.log(error);
     }
     setLoadingLike(false);

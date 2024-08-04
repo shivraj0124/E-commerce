@@ -10,6 +10,15 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import PowerIcon from "@mui/icons-material/Power";
 import { AuthContext } from "../Components/Context/AuthContext.jsx";
 import axios from "axios";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 const Home = () => {
   const [discountedProducts, setDiscountedProducts] = useState([]);
@@ -18,36 +27,37 @@ const Home = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/discount/getAllDiscounts`
       );
-      return response.data.discounts;
+      setDiscountedProducts(response.data.discounts);
     } catch (error) {
       return error;
     }
   };
 
-  const getDiscountedProducts = async () => {
-    try {
-      const discounts = await getAllDiscounts();
+  // const getDiscountedProducts = async () => {
+  //   try {
+  //     const discounts = await getAllDiscounts();
 
-      // console.log("discounts are ", discounts);
-      const productRequests = discounts.map((discount) =>
-        axios.get(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/api/v1/product/getSingleProduct/${discount.products._id}`
-        )
-      );
-      const productResponse = await Promise.all(productRequests);
-      // console.log("products response is ", productResponse);
-      const products = productResponse.map((response) => response.data.product);
-      setDiscountedProducts(products);
-    } catch (error) {
-      console.log("Error Got while Fetching Discounts", error);
-    }
-  };
+  //     // console.log("discounts are ", discounts);
+  //     const productRequests = discounts.map((discount) =>
+  //       axios.get(
+  //         `${
+  //           import.meta.env.VITE_BACKEND_URL
+  //         }/api/v1/product/getSingleProduct/${discount.products._id}`
+  //       )
+  //     );
+  //     const productResponse = await Promise.all(productRequests);
+  //     // console.log("products response is ", productResponse);
+  //     const products = productResponse.map((response) => response.data.product);
+  //     setDiscountedProducts(products);
+  //   } catch (error) {
+  //     console.log("Error Got while Fetching Discounts", error);
+  //   }
+  // };
   useEffect(() => {
-    getDiscountedProducts();
+    // getDiscountedProducts();\
+    getAllDiscounts();
   }, []);
-  console.log(discountedProducts);
+  // console.log(discountedProducts);
   const Discount1 = {
     name: "Buy One Get One",
     image:
@@ -73,49 +83,78 @@ const Home = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-
+  console.log(discountedProducts);
   return (
     <>
-      <div className=" px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden ">
-        {discountedProducts && (
-          <Slider {...sliderSetting} className="" swipe={true}>
-            {discountedProducts.map((productArray, index) => {
-              const product = productArray[0];
-              return (
+      <div className="px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden">
+        <Swiper
+        // spaceBetween={50}
+        // slidesPerView={3}
+        // onSlideChange={() => console.log("slide change")}
+        // onSwiper={(swiper) => console.log(swiper)}
+        >
+          {discountedProducts &&
+            discountedProducts.map((discount, index) => (
+              <SwiperSlide
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={50}
+                slidesPerView={3}
+                navigation
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log("slide change")}
+              >
                 <DiscountBanner
-                  key={product._id}
-                  discountName={product.name}
-                  productImage={product.images[0]}
-                  discountDate={product.discount.name}
-                  productPrice={product.price}
-                  MRP={product.price}
+                  key={index}
+                  discountName={discount.name}
+                  productImage={discount.products.images[0]}
+                  discountDate={discount.endDate}
+                  productPrice={discount.products.price}
+                  MRP={discount.products.price}
+                  index={index}
                 />
-              );
-            })}
-          </Slider>
-        )}
+              </SwiperSlide>
+            ))}
+        </Swiper>
       </div>
 
-      <div className=" bg-slate-100 flex flex-col md:hidden ">
+      {/* <div className=" bg-slate-100 flex flex-col md:hidden ">
         {discountedProducts && (
           <Slider {...sliderSetting} className="" swipe={true}>
-            {discountedProducts.map((productArray, index) => {
+            {/* {discountedProducts.map((productArray, index) => {
               const product = productArray[0];
 
-              return (
-                <DiscountBanner
-                  key={product._id}
-                  discountName={product.name}
-                  productImage={product.images[0]}
-                  discountDate={product.discount.name}
-                  productPrice={product.price}
-                  MRP={product.price}
-                />
-              );
-            })}
+              
+            <DiscountBanner
+              key={Discount1._id}
+              discountName={Discount1.name}
+              productImage={Discount1.image}
+              discountDate={Discount1.date}
+              productPrice={Discount1.price}
+              MRP={Discount1.price}
+            />
+            
           </Slider>
-        )}
-      </div>
+        
+      </div> */}
+      {/* <Swiper
+        spaceBetween={50}
+        slidesPerView={3}
+        onSlideChange={() => console.log("slide change")}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        <SwiperSlide>
+          <DiscountBanner
+            key={Discount1._id}
+            discountName={Discount1.name}
+            productImage={Discount1.image}
+            discountDate={Discount1.date}
+            productPrice={Discount1.price}
+            MRP={Discount1.price}
+          />
+        </SwiperSlide>
+      </Swiper> */}
 
       <div className=" flex  w-screen justify-between px-6 py-4 text-sm sm:text-lg font-light ">
         <span className=" flex flex-col justify-center text-center items-center cursor-pointer ">

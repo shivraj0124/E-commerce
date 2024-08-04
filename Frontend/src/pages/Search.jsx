@@ -5,7 +5,7 @@ import SearchFilter from "../Components/SearchPage/SearchFilter.jsx";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
-
+import { AuthContext } from "../Components/Context/AuthContext.jsx";
 const Search = () => {
   const [sortOption, showSortOption] = useState(false);
   const [filtersOption, showFiltersOption] = useState(false);
@@ -24,21 +24,28 @@ const Search = () => {
   const { searchTerm } = useContext(ProductContext);
 
   const [products, setProducts] = useState([]);
+  const { userDetails } = useContext(AuthContext);
 
+  console.log("user Id is ", userDetails._id);
   const getAllProducts = async (productKeyword, productCategory) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`
-      );
+    if (userDetails) {
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/getAllProducts`,
+          {
+            userId: userDetails._id,
+          }
+        );
 
-      if (response.data.success) {
-        setProducts(response.data.products);
-
+        if (response.data.success) {
+          setProducts(response.data.dataOfP);
+          console.log(response.data.dataOfP);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
         setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
     }
   };
 
@@ -110,6 +117,7 @@ const Search = () => {
                 productImage={product.images}
                 productDiscount={product.discount}
                 loading={false}
+                // hasLiked={}
               />
             ))
           )}

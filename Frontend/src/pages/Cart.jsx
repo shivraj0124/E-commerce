@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState } from "react";
+import ProductBox from "../Components/ProductBox";
+import axios from "axios";
 
 const Cart = () => {
-  return (
-    <div>Cart</div>
-  )
-}
+  const [cartLoading , setCartLoading] = useState(false)
 
-export default Cart
+  const getCartInfo = async() =>{
+    setCartLoading(true)
+  }
+  return <div>Cart</div>;
+};
+
+export default Cart;

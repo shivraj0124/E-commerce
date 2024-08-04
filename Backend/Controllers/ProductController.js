@@ -3,9 +3,11 @@ const ProductModel = require("../Models/ProductModel");
 const CategoryModel = require("../Models/CategoryModel");
 const UserModel = require("../Models/UserModel");
 const LikeModel = require("../Models/LikeModel");
+
 const getAllProducts = async (req, res) => {
   try {
     const { userId } = req.body;
+    console.log("user Id is ",req.body);
     const products = await ProductModel.find()
       .populate({
         path: "reviews",
@@ -40,7 +42,7 @@ const getAllProducts = async (req, res) => {
           let result = {
             ...products[i]._doc, // Spread operator to include all product details
             hasLiked,
-            hasAddedToCart
+            hasAddedToCart,
           };
           dataOfP.push(result);
         }
@@ -53,6 +55,7 @@ const getAllProducts = async (req, res) => {
         message: "Products fetched",
         dataOfP,
       });
+      // console.log(dataOfP);
     } else {
       res.send({
         success: false,
