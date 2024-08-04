@@ -1,7 +1,7 @@
 import React from "react";
 import { RxDashboard } from "react-icons/rx";
 import { IoIosArrowDown } from "react-icons/io";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import MenuOpenSharpIcon from '@mui/icons-material/MenuOpenSharp';
 import ArrowForwardIosTwoToneIcon from '@mui/icons-material/ArrowForwardIosTwoTone';
 import adminHook from "../Context/AdminContext";
@@ -14,10 +14,11 @@ function Sidebar() {
   const { isOpenSidebar,setIsOpenSidebar}=adminHook()
   const location = useLocation();
   const locationPath = location.pathname;
+  const navigate =useNavigate()
   console.log(location, "locationnnn");
   return (
-    <div className="h-full  border-r bg-white">
-      <div className="p-2 border-b"> 
+    <div className="h-full  border-r bg-white shadow-xl">
+      <div className="px-2 py-1 h-[50px] "> 
         <span className="font-bold text-3xl text-blue-500">
           E-<span className="text-black">Store</span>
         </span>
@@ -32,7 +33,7 @@ function Sidebar() {
                 : ""
             } hover:bg-blue-300 hover:bg-opacity-25 hover:text-blue-600 font-semibold cursor-pointer rounded-md`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" onClick={()=>navigate("/admin/dashboard")}>
               <RxDashboard size={20} />
               <span className="text-lg">Dashboard</span>
             </div>
@@ -45,7 +46,7 @@ function Sidebar() {
                 : ""
             } hover:bg-blue-300 hover:bg-opacity-25 hover:text-blue-600 font-semibold cursor-pointer rounded-md`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" onClick={()=>navigate("/admin/products")}>
               <BsCart4 size={20} />
               <span className="text-lg">Products</span>
             </div>

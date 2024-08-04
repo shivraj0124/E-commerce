@@ -10,7 +10,8 @@ const {
   updatePersonalInfo,
   getCartInfo,
   geSingleUser,
-  removeFromCart
+  removeFromCart,
+  orderTheProduct
 } = require("../Controllers/UserControllers");
 const { protect } = require("../Middleware/authMiddleware");
 
@@ -21,6 +22,7 @@ router.get("/geSingleUser", protect, geSingleUser);
 
 router.post("/addToCart", protect, addToCart);
 router.post("/removeFromCart", protect, removeFromCart);
+router.post("/orderTheProduct", protect, orderTheProduct);
 
 router.post("/addReview", protect, addReview);
 router.post("/likeDisLikeTheProduct", protect, likeDisLikeTheProduct);

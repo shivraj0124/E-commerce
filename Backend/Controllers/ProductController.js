@@ -72,7 +72,7 @@ const getAllProducts = async (req, res) => {
 
 const getAllProductsByCategory = async (req, res) => {
   try {
-    const { category } = req.body;
+    const { category,userId } = req.body;
     const products = await ProductModel.find({ category: category })
       .populate({
         path: "reviews",
@@ -81,13 +81,46 @@ const getAllProductsByCategory = async (req, res) => {
         },
       })
       .populate("discount");
+
+let dataOfP =[]
     if (products && products.length > 0) {
+      if (userId) {
+        const getUser = await UserModel.findById(userId);
+
+        let userCart = getUser.cart;
+        // Check if the user has liked each product
+        const userCartProductIds = new Set(
+          userCart.map((item) => item?.product?.toString())
+        );
+        console.log("Hello");
+        for (let i = 0; i < products.length; i++) {
+          let hasLiked = false;
+          const checkIfLike = await LikeModel.find({
+            user: userId,
+            product: products[i]._id,
+          });
+          const objectIdString = products[i]._id?.toString();
+          const hasAddedToCart = userCartProductIds.has(objectIdString);
+          if (checkIfLike.length > 0) {
+            hasLiked = true;
+          }
+          let result = {
+            ...products[i]._doc, // Spread operator to include all product details
+            hasLiked,
+            hasAddedToCart
+          };
+          dataOfP.push(result);
+        }
+      }
+      if (dataOfP.length === 0 && products.length !== 0) {
+        dataOfP = products;
+      }
       res.send({
         success: true,
         message: "Products fetched",
-        products,
+        dataOfP,
       });
-    } else {
+    }  else {
       res.send({
         success: false,
         message: "No Products Found ",

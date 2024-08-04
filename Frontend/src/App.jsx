@@ -26,8 +26,13 @@ import TopLayout from "./Components/Home/TopLayout.jsx";
 import { AuthProvider } from "./Components/Context/AuthContext.jsx";
 import { ProductProvider } from "./Components/Context/ProductContext.jsx";
 import { AdminProvider } from "./Components/Context/AdminContext.jsx";
+<<<<<<< HEAD
 import Category from "./pages/Category.jsx";
 
+=======
+import MainDashboard from "./Components/AdminDashboard/AdminComponents/MainDashboard.jsx";
+import ProductAdmin from "./Components/AdminDashboard/ProductComponents/ProductAdmin.jsx"
+>>>>>>> a2838a7f4185a21c3bceaf81d97c093ea1149830
 const App = ({ location }) => {
   return (
     <ProductProvider>
@@ -54,11 +59,18 @@ const App = ({ location }) => {
                 <Route path="register-user" element={<UserSignupBox />} />
                 <Route path="register-seller" element={<SellerSignupBox />} />
               </Route>
-              <Route path="/admin">
+              <Route path="/admin" element={<MainAdminContainer />}>
                 <Route
                   exact
                   path="/admin/dashboard"
-                  element={<MainAdminContainer />}
+                  element={<MainDashboard/>}
+                  
+                />
+                <Route
+                  exact
+                  path="/admin/products"
+                  element={<ProductAdmin/>}
+                  
                 />
               </Route>
             </Routes>
