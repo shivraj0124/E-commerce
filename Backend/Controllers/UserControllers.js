@@ -6,7 +6,7 @@ const CategoryModel = require("../Models/CategoryModel");
 const ReviewModel = require("../Models/ReviewModel");
 const LikeModel = require("../Models/LikeModel");
 const UserModel = require("../Models/UserModel");
-
+const OrderModel = require("../Models/OrderModel");
 const getAllLikesByUser = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -23,10 +23,10 @@ const getAllLikesByUser = async (req, res) => {
     let allLikes = [];
     if (userCart && likes && likes.length > 0 && userCart.length > 0) {
       const userCartProductIds = new Set(
-        userCart.map((item) => item?.product?.toString())
+        userCart.map((item) => item?.product?.toString())                   
       );
 
-       allLikes = likes.map((like) => {
+      allLikes = likes.map((like) => {
         const objectIdString = like?.product?._id?.toString();
         const hasAddedToCart = userCartProductIds.has(objectIdString);
 
@@ -37,6 +37,9 @@ const getAllLikesByUser = async (req, res) => {
         };
       });
     }
+
+  
+
     if (allLikes.length > 0) {
       res.send({
         success: true,
@@ -447,6 +450,65 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+const orderTheProduct = async (req, res) => {
+  const {
+    orderItems,
+    paymentMethod,
+    paymentResult,
+    shippingAddress,
+    totalPrice,
+    isPaid,
+    status,
+  } = req.body;
+  const userId = req.user._id;
+  console.log("orderItems,paymentMethod,paymentResult,shippingAddress,totalPrice,isPaid,status")
+  console.log(
+    orderItems,
+    paymentMethod,
+    paymentResult,
+    shippingAddress,
+    totalPrice,
+    isPaid,
+    status
+  )
+  const getUser =await UserModel.findById(userId)
+  console.log("getUser",getUser);
+  try {
+    const newOrder = new OrderModel({
+      user:userId,
+      orderItems,
+      paymentMethod,
+      paymentResult,
+      shippingAddress,
+      totalPrice,
+      isPaid,
+      status,
+    });
+    const order = await newOrder.save();
+
+
+    if(order){
+      getUser.orders.push(newOrder._id);
+      await getUser.save();
+      return res.send({
+        success: true,
+        message: "Ordered Successfully",
+        order,
+      });
+    }else{
+      return res.send({
+        success: false,
+        message: "Failed to order ",
+        order,
+      });
+    }
+  } catch (err) {
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
 module.exports = {
   getAllLikesByUser,
   getAllReviewsByUser,
@@ -458,4 +520,5 @@ module.exports = {
   updatePersonalInfo,
   getCartInfo,
   geSingleUser,
+  orderTheProduct,
 };
