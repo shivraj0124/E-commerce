@@ -111,6 +111,7 @@ const Search = () => {
           ) : (
             products.map((product) => (
               <SearchResult
+              
                 key={product._id}
                 productid={product._id}
                 productName={product.name}

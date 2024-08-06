@@ -12,7 +12,6 @@ const DiscountBanner = ({
   index,
   productId,
 }) => {
-  const { openProductPage } = useContext(ProductContext);
   const calculateTimeLeft = () => {
     const targetDate = new Date(discountDate);
     const now = new Date();
@@ -39,6 +38,10 @@ const DiscountBanner = ({
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
+  const openProductPage = async (productId) => {
+    window.open(`${window.location.origin}/product/${productId}`);
+    console.log(productId)
+  };
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
@@ -70,6 +73,7 @@ const DiscountBanner = ({
         className="w-screen flex bg-slate-100  sm:min-h-[1/8] justify-center sm:gap-12 cursor-pointer sm:flex-row flex-col h-full sm:h-full  max-md:hidden"
         onClick={() => {
           openProductPage(productId);
+        
         }}
       >
         {/* <span>{index}</span> */}
@@ -112,7 +116,12 @@ const DiscountBanner = ({
         </div>
       </div>
 
-      <div className="px-3 pt-2 w-full md:hidden flex justify-between bg-slate-100  overflow-hidden   cursor-pointer ">
+      <div
+        className="px-3 pt-2 w-full md:hidden flex justify-between bg-slate-100  overflow-hidden   cursor-pointer "
+        onClick={() => {
+          openProductPage(productId);
+        }}
+      >
         <div className="flex flex-col w-[50%] ">
           <div className="text-xl font-bold flex text-black">
             {discountName}

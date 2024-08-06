@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.19",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "axios": "^1.7.2",
+    "clipboard": "^2.0.11",
     "cool-nav": "^0.0.4",
     "dotenv": "^16.4.5",
     "flowbite-react": "^0.10.1",
@@ -38,7 +39,7 @@
     "react-tooltip": "^5.27.0",
     "recharts": "^2.12.7",
     "slick-carousel": "^1.8.1",
-    "swiper": "^11.1.8"
+    "swiper": "^11.1.9"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

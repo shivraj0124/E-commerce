@@ -7,7 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { AuthContext } from "../Context/AuthContext.jsx";
 import axios from "axios";
-import {ProductContext} from "../Context/ProductContext.jsx";
+import { ProductContext } from "../Context/ProductContext.jsx";
 
 const SearchResult = ({
   productid,
@@ -25,7 +25,7 @@ const SearchResult = ({
   hasAddedToCart,
   onProductUpdate,
 }) => {
-  const { userDetails, token , updateFields } = useContext(AuthContext);
+  const { userDetails, token, updateFields } = useContext(AuthContext);
   const [loadingLike, setLoadingLike] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
   const calculateDiscountPrice = (originalPrice, discountPercentage) => {
@@ -64,7 +64,7 @@ const SearchResult = ({
     } catch (error) {
       onProductUpdate(productid, { hasLiked });
       toast.error(error.response?.data.message);
-      console.log(error)
+      console.log(error);
     } finally {
       setLoadingLike(false);
     }
@@ -116,13 +116,17 @@ const SearchResult = ({
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
-        
       }
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong");
     }
     setButtonLoading(false);
+  };
+
+  const openProductPage = async (productId) => {
+    window.open(`${window.location.origin}/product/${productId}`);
+    console.log(productId);
   };
   return (
     <>
@@ -196,7 +200,10 @@ const SearchResult = ({
           </div>
         </div>
       ) : (
-        <div className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-6 py-5 w-full flex-row ">
+        <div
+          className="h-full md:flex bg-white dark:bg-[#121212] rounded-md flex-wrap justify-around shadow-md mb-5 hidden cursor-pointer px-6 py-5 w-full flex-row "
+          onClick={() => openProductPage(productid)}
+        >
           <div className="flex w-4/5 justify-between ">
             <div className="relative h-52 w-1/6">
               <img
@@ -343,10 +350,13 @@ const SearchResult = ({
           </div>
         </div>
       ) : (
-        <div className="h-full sm:hidden bg-white dark:bg-[#121212] rounded-md w-full gap-2 shadow-md flex px-3 py-3 mb-5">
+        <div
+          className="h-full sm:hidden bg-white dark:bg-[#121212] rounded-md w-full gap-2 shadow-md flex px-3 py-3 mb-5"
+          onClick={() => openProductPage(productid)}
+        >
           <div className="relative h-32 w-1/3 ">
             <img
-              // src={productImage[0]}
+              src={productImage[0]}
               alt="product image"
               className="absolute inset-0 h-full w-full object-cover"
             />

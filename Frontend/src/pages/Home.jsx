@@ -82,7 +82,6 @@ const Home = () => {
       setProductsLoading(false);
     }
   };
-  console.log(discountedProducts);
   return (
     <>
       <div className="px-8 bg-slate-100 md:flex flex-col max-h-[1/16] hidden">
@@ -108,6 +107,7 @@ const Home = () => {
             discountedProducts.map((discount, index) => (
               <DiscountBanner
                 key={index}
+                productId={discount.products._id}
                 discountName={discount.name}
                 productImage={discount.products.images[0]}
                 discountDate={discount.endDate}
