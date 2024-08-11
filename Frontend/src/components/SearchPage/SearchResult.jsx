@@ -355,11 +355,19 @@ const SearchResult = ({
           onClick={() => openProductPage(productid)}
         >
           <div className="relative h-32 w-1/3 ">
-            <img
-              src={productImage[0]}
-              alt="product image"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            {productImage ? (
+              <img
+                src={productImage[0]}
+                alt="product image"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <img
+                // src={productImage[0]}
+                alt="product image" 
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
           </div>
           <div className=" flex flex-col w-2/3 justify-between">
             <div className=" flex flex-col justify-between">

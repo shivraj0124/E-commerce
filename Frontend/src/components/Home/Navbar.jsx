@@ -16,7 +16,7 @@ const Navbar = ({ openmodal }) => {
   const { isLogin, token, userDetails } = useContext(AuthContext);
 
   return (
-    <div className=" flex min-w-screen max-w-full bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between dark:bg-blue-700">
+    <div className=" flex w-screen  bg-blue-600 text-white text-xs sm:text-xl py-4 sm:py-0 px-3 sm:px-10 justify-between dark:bg-blue-700">
       <div className=" flex gap-7 items-center">
         <div className=" flex gap-2 items-center">
           <span
