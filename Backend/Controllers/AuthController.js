@@ -249,6 +249,7 @@ const verifyToken = async (req, res) => {
   }
 };
 
+
 module.exports = {
   loginController,
   signupController,
