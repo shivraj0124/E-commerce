@@ -249,6 +249,17 @@ const verifyToken = async (req, res) => {
   }
 };
 
+// admin login
+const admin = async(req,res)=>{
+  try{
+    const {username,password}=req.body
+    if(username == "admin1" && password == "admin123"){
+      res.status(200).json({
+        success:true,
+        message:"Admin logged in successful."
+      })
+  }
+}
 module.exports = {
   loginController,
   signupController,
