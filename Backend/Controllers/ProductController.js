@@ -28,24 +28,27 @@ const getAllProducts = async (req, res) => {
           userCart.map((item) => item?.product?.toString())
         );
         console.log("Hello");
-        for (let i = 0; i < products.length; i++) {
-          let hasLiked = false;
-          const checkIfLike = await LikeModel.find({
-            user: userId,
-            product: products[i]._id,
-          });
-          const objectIdString = products[i]._id?.toString();
-          const hasAddedToCart = userCartProductIds.has(objectIdString);
-          if (checkIfLike.length > 0) {
-            hasLiked = true;
+        const likedProducts = await LikeModel.find({ user: userId })
+          .select('product')
+          .lean();
+
+        const likedProductIds = new Set(
+            likedProducts.map((like) => like.product.toString())
+        );
+
+          for (let i = 0; i < products.length; i++) {
+              const objectIdString = products[i]._id?.toString();
+              const hasLiked = likedProductIds.has(objectIdString);
+              const hasAddedToCart = userCartProductIds.has(objectIdString);
+
+              let result = {
+                  ...products[i]._doc,
+                  hasLiked,
+                  hasAddedToCart,
+              };
+              dataOfP.push(result);
           }
-          let result = {
-            ...products[i]._doc, // Spread operator to include all product details
-            hasLiked,
-            hasAddedToCart,
-          };
-          dataOfP.push(result);
-        }
+
       }
       if (dataOfP.length === 0 && products.length !== 0) {
         dataOfP = products;
