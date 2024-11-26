@@ -127,50 +127,54 @@ const updateProduct = async (req, res) => {
   } = req.body;
 
   try {
-    // Define the update object
-    const updateData = {
-      name,
-      description,
-      price,
-      category,
-      brand,
-      stock,
-      $push: {},
-    };
-
-    // Check if images are provided and update accordingly
-    if (Array.isArray(images) && images.length > 0) {
-      updateData.$push.images = { $each: images };
-    } else if (images) {
-      updateData.$push.images = images;
-    } else {
-      delete updateData.$push; // Remove $push if no images to update
+    // Ensure the productId is provided
+    if (!productId) {
+      return res.status(400).send({
+        success: false,
+        message: "Product ID is required.",
+      });
     }
 
-    // Update the product
-    const updatedProduct = await ProductModel.findOneAndUpdate(
-      { _id: productId },
+    // Build the update object dynamically
+    const updateData = {
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(price && { price }),
+      ...(category && { category }),
+      ...(brand && { brand }),
+      ...(stock && { stock }),
+    };
+
+    // Add images if provided
+    if (Array.isArray(images) && images.length > 0) {
+      updateData.$push = { images: { $each: images } };
+    }
+
+    // Update the product in the database
+    const updatedProduct = await ProductModel.findByIdAndUpdate(
+      productId,
       updateData,
       { new: true } // Options: return the updated document
     );
 
+    // Handle the case where the product is not found
     if (!updatedProduct) {
-      return res.send({
+      return res.status(404).send({
         success: false,
-        message: "Product Not Found.",
+        message: "Product not found.",
       });
     }
 
     return res.send({
       success: true,
-      message: "Product Updated Successfully.",
+      message: "Product updated successfully.",
       product: updatedProduct,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error updating product:", err.message);
     return res.status(500).send({
       success: false,
-      message: err.message,
+      message: "An error occurred while updating the product.",
     });
   }
 };
